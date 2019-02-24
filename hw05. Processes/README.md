@@ -1,7 +1,7 @@
 # linux-hw5
 # Управление процессами
 
-#### script1.sh
+#### [script1.sh](https://github.com/shaadowsky/LinuxAdmin012019/blob/master/hw05.%20Processes/script1.sh)
 
   написать свою реализацию ps ax используя анализ /proc
   
