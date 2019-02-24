@@ -59,8 +59,10 @@ function unionr {
 
 # Get only digits to $PID
 PID=`ls /proc | grep -E '[[:digit:]]' | sort -n | xargs`
+
 # Output 1st line as header of columns
 echo "  PID TTY    STAT    COMMAND"
+
 # Output values(parametrs) of $PIDs
 unionr $PID
 
