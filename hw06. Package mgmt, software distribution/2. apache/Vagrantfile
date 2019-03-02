@@ -47,8 +47,7 @@ Vagrant.configure("2") do |config|
             box.vm.network "private_network", ip: boxconfig[:ip_addr]  #it's for NAT
             
             box.vm.provider :virtualbox do |vb|
-                    vb.customize ["modifyvm", :id, "--memory", "6000"]
-                    vb.customize ["modifyvm", :id, "--cpus", "3"]
+                    vb.customize ["modifyvm", :id, "--memory", "256"]
                     needsController = false
             boxconfig[:disks].each do |dname, dconf|
                 unless File.exist?(dconf[:dfile])
