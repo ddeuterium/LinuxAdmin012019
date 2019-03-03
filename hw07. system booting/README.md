@@ -32,4 +32,73 @@ PV необходимо инициализировать с параметром
 
 работает примерно как п.2, только не работает флаг enforcing=0 и надо перезагружать.
 
+Script started on 2019-03-03 21:02:37+0800
+
+    $ sudo su
+
+посмотрим, что происходит
+
+    # vgs
+    VG         #PV #LV #SN Attr   VSize   VFree
+    VolGroup00   1   2   0 wz--n- <38.97g    0 
+
+переименуем VG
+
+    # vgrename VolGroup00 OtusRoot
+      Volume group "VolGroup00" successfully renamed to "OtusRoot"
+
+заменим старое название VG на новое
+
+    # sed -i 's/VolGroup00/OtusRoot/g' /etc/fstab
+    # sed -i 's/VolGroup00/OtusRoot/g' /boot/grub2/grub.cfg 
+    # sed -i 's/VolGroup00/OtusRoot/g' /etc/default/grub
+
+пересобираем образ initrd
+    
+    # dracut -f -v
+
+или так
+
+    # mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+
+создадим папку для кастомных скриптов
+
+    # mkdir /usr/lib/dracut/modules.d/01test
+
+скопируем скрипты внутрь VM
+
+    # reboot
+    $ vscp test.sh lvm:~/
+    $ vscp module-setup.sh lvm:~/ 
+    $ vssh
+      Last login: Sun Mar  3 13:15:11 2019 from 10.0.2.2
+      
+проверим как переименовалось
+
+    # vgs
+      VG       #PV #LV #SN Attr   VSize   VFree
+      OtusRoot   1   2   0 wz--n- <38.97g    0 
+
+скопируем скрипты в модули
+
+    $ sudo cp * /usr/lib/dracut/modules.d/01test
+
+пересоберем initrd
+
+    $ sudo dracut -f -v
+    или
+    $ sudo mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+
+*** Creating image file ***
+*** Creating image file done ***
+*** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
+
+После чего можно пойти двумя путями для проверки:
+
+1. Перезагрузиться и руками выключить опции _rghb_ и _quiet_ и позырить пингвина
+
+2. Либо отредактировать _grub.cfg_ убрав эти опции. ВНИМАНИЕ! не использовать _sed_, сломается загрузчик!!
+
+В итоге при загрузке будет пауза на 10 секунд и можно позырить на пингвина
+
 
