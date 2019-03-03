@@ -56,9 +56,7 @@ Script started on 2019-03-03 21:02:37+0800
 пересобираем образ initrd
     
     # dracut -f -v
-
-или так
-
+    или так
     # mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
 
 создадим папку для кастомных скриптов
