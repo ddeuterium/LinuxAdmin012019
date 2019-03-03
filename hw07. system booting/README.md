@@ -9,7 +9,7 @@ PV необходимо инициализировать с параметром
 Критерии оценки: Описать действия, описать разницу между методами получения шелла в процессе загрузки.
 Где получится - используем script, где не получается - словами или копипастой описываем действия.
 
-существует 3 способа войти в систему без пароля, если есть к ней физический доступ или удаленка на этап загрузки ядра. Во всех случаях надо выбрать ядро и нажать кнопку E(dit). После этого в конец строки, начинающейся на linux16 (linuxefi если на машине EFI), добавить:
+существует 3 способа войти в систему без пароля, если есть к ней физический доступ или удаленка на этап загрузки ядра. Во всех случаях надо выбрать ядро и нажать кнопку _E(dit)_. После этого в конец строки, начинающейся на linux16 (linuxefi если на машине EFI), добавить:
 
 1. #### init=/bin/sh
 
@@ -17,7 +17,7 @@ PV необходимо инициализировать с параметром
 
 2. #### rd.break 
 
-отсюда можно сбросить пароль рута. Лучше сделать так: #### rw rd.break enforcing=0 ####, это позволит не подкидывать данные SElinux об изменном пароле. Мало такого, такой способ является рекомендованным [Procedure 25.6 RedHat Adm. Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#proc-Resetting_the_Root_Password_Using_rd.break#Procedure%2025.6.) #### rw #### монтирует /sysroot ReadWrite, #### enforcing=0 #### позволит не подкидывать данные для SELinux (touch /.autorelabel)
+отсюда можно сбросить пароль рута. Лучше сделать так: _rw rd.break enforcing=0_, это позволит не подкидывать данные SElinux об изменном пароле. Мало такого, такой способ является рекомендованным [Procedure 25.6 RedHat Adm. Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#proc-Resetting_the_Root_Password_Using_rd.break#Procedure%2025.6.) _rw_ монтирует /sysroot ReadWrite, _enforcing=0_ позволит не подкидывать данные для SELinux (touch /.autorelabel)
 
     mount -o remount,rw /sysroot
     chroot /sysroot
