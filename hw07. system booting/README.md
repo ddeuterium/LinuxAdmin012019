@@ -11,9 +11,13 @@ PV необходимо инициализировать с параметром
 
 существует 3 способа войти в систему без пароля, если есть к ней физический доступ или удаленка на этап загрузки ядра. Во всех случаях надо выбрать ядро и нажать кнопку E(dit). После этого в конец строки, начинающейся на linux16 (linuxefi если на машине EFI), добавить:
 
-1. #### init#=/bin/sh #### Загрузится минимальный shell, поменять пароль не получится, либо нужно сильное колдунство, т.к. нет команды chroot
+1. #### init=/bin/sh
 
-2. #### rd.break #### отсюда можно сбросить пароль рута. Лучше сделать так: #### rw rd.break enforcing=0 ####, это позволит не подкидывать данные SElinux об изменном пароле. Мало такого, такой способ является рекомендованным [Procedure 25.6 RedHat Adm. Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#proc-Resetting_the_Root_Password_Using_rd.break#Procedure%2025.6.) #### rw #### монтирует /sysroot ReadWrite, #### enforcing=0 #### позволит не подкидывать данные для SELinux (touch /.autorelabel)
+Загрузится минимальный shell, поменять пароль не получится, либо нужно сильное колдунство, т.к. нет команды chroot
+
+2. #### rd.break 
+
+отсюда можно сбросить пароль рута. Лучше сделать так: #### rw rd.break enforcing=0 ####, это позволит не подкидывать данные SElinux об изменном пароле. Мало такого, такой способ является рекомендованным [Procedure 25.6 RedHat Adm. Guide](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/7/html/system_administrators_guide/sec-terminal_menu_editing_during_boot#proc-Resetting_the_Root_Password_Using_rd.break#Procedure%2025.6.) #### rw #### монтирует /sysroot ReadWrite, #### enforcing=0 #### позволит не подкидывать данные для SELinux (touch /.autorelabel)
 
     mount -o remount,rw /sysroot
     chroot /sysroot
@@ -24,6 +28,8 @@ PV необходимо инициализировать с параметром
   
 #пойдет загрузка системы
   
-3. #### init=/sysroot/bin/sh #### работает примерно как п.2, только не работает флаг enforcing=0 и надо перезагружать.
+3. #### init=/sysroot/bin/sh
+
+работает примерно как п.2, только не работает флаг enforcing=0 и надо перезагружать.
 
 
