@@ -14,8 +14,8 @@
 
 запуск службы/таймера
 
-  systemctl start watchlog.timer
+    systemctl start watchlog.timer
   
 посмотреть как отрабатывает скрипт
 
-  tail -f /var/log/messages
+    tail -f /var/log/messages
