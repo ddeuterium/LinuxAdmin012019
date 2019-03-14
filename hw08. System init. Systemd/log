@@ -1,0 +1,1510 @@
+Script started on 2019-03-14 11:14:11+0800
+$ 
+$ 
+$ 
+$ vagrant scp httpd.service lvm:/
+$ vagrant scp spawn-fcgi.service  lvm:~/
+$ vagrant scp wathdog lvm:/etc/sysconfig/
+$ vagrant scp watchdog.log lvm:/var/log/
+$ vagrant scp watchdog.service lvm:/etc/systemd/system/
+$ vagrant scp watchdog.sh lvm:/opt/
+$ vagrant scp watchdog.timer lvm:/etc/systemd/system/
+
+
+
+# cat /etc/sysconfig/watchdog 
+    # Configuration file for my watchdog service
+    # Place it to /etc/sysconfig
+
+    # File and word in that file that we will be monit
+    WORD="ALERT"
+    LOG=/var/log/watchdog.log
+
+
+
+# cat /var/log/watchdog.log 
+    [2019-03-02 UTC+8 02:00] mail is OK
+    [2019-03-02 UTC+8 02:15] mail is OK
+    [2019-03-02 UTC+8 02:30] mail is OK
+    [2019-03-02 UTC+8 02:45] mail is OK
+    [2019-03-02 UTC+8 03:00] mail is OK
+    [2019-03-02 UTC+8 03:15] mail is OK
+    [2019-03-02 UTC+8 03:30] mail is pawned!! ALERT
+    [2019-03-02 UTC+8 03:45] mail is OK
+    [2019-03-02 UTC+8 04:00] mail is OK
+    [2019-03-02 UTC+8 04:15] mail is OK
+    [2019-03-02 UTC+8 04:30] mail is pawned!! ALERT
+    [2019-03-02 UTC+8 02:45] mail is OK
+    [2019-03-02 UTC+8 03:00] mail is OK
+    [2019-03-02 UTC+8 03:15] mail is OK# 
+
+# cat /opt/watchdog.sh 
+    #!/bin/bash
+
+    WORD=$1
+    LOG=$2
+    DATE=`date`
+
+    if grep $WORD $LOG &> /dev/null
+    then
+        logger "$DATE: I found word, Master!"
+    else
+        exit 0
+    fi
+    
+# cat /etc/systemd/system/watchdog.service 
+    [Unit]
+    Description=My watchlog service
+
+    [Service]
+    Type=oneshot
+    EnvironmentFile=/etc/sysconfig/watchdog
+    ExecStart=/opt/watchlog.sh $WORD $LOG
+
+# cat /etc/systemd/system/watchdog.timer
+
+    [Unit]  
+    Description=Run watchlog script every 30 second
+
+    [Timer]
+    # Run every 30 second
+    OnUnitActiveSec=30
+    Unit=watchdog.service
+
+    [Install]
+    WantedBy=multi-user.target
+
+# 
+# 
+# 
+# systemctl start watchdog.timer 
+
+# tail -f /vatr[K[Kr/log/messages
+Mar 14 03:19:46 localhost systemd-logind: New session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd: Starting Session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+^C
+# tail -f /var/log/messages
+Mar 14 03:19:46 localhost systemd-logind: New session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd: Starting Session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+^C
+# ls
+httpd.service  spawn-fcgi.service
+# ls /vat[Kr/log
+[0m[38;5;27manaconda[0m  boot.log  [38;5;27mchrony[0m  dmesg               lastlog  messages  [38;5;27mrhsm[0m    spooler   [38;5;27mtuned[0m         wtmp
+[38;5;27maudit[0m     btmp      cron    grubby_prune_debug  maillog  [38;5;27mqemu-ga[0m   secure  tallylog  watchdog.log  yum.log
+# 
+# 
+# 
+# chmod +x w[K/opt/watchdog.sh 
+# 
+# 
+# chmod +x /opt/watchdog.sh 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[15Pls /var/log[Ktail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csystemctl status watchdog.timer [1Prt[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+# systemctl start watchdog.timer 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5Pchmod +x /opt/watchdog.sh[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[15Pls /var/log[Ktail -f /var/log/messages
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+^[[A^[[A^C
+# tail -f /var/log/messages
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+^C
+# tail /vat[Kr/log/messages
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+# cat var[K[K[K/var/log/messages 
+Mar 14 03:12:47 localhost journal: Runtime journal is using 4.0M (max allowed 11.7M, trying to leave 17.6M free of 113.8M available → current limit 11.7M).
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys cpuset
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys cpu
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys cpuacct
+Mar 14 03:12:47 localhost kernel: Linux version 3.10.0-862.2.3.el7.x86_64 (builder@kbuilder.dev.centos.org) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-28) (GCC) ) #1 SMP Wed May 9 18:05:47 UTC 2018
+Mar 14 03:12:47 localhost kernel: Command line: BOOT_IMAGE=/vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/VolGroup00-LogVol00 ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet
+Mar 14 03:12:47 localhost kernel: e820: BIOS-provided physical RAM map:
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x0000000000100000-0x000000000ffeffff] usable
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x000000000fff0000-0x000000000fffffff] ACPI data
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x00000000fec00000-0x00000000fec00fff] reserved
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x00000000fee00000-0x00000000fee00fff] reserved
+Mar 14 03:12:47 localhost kernel: BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+Mar 14 03:12:47 localhost kernel: NX (Execute Disable) protection: active
+Mar 14 03:12:47 localhost kernel: SMBIOS 2.5 present.
+Mar 14 03:12:47 localhost kernel: Hypervisor detected: KVM
+Mar 14 03:12:47 localhost kernel: e820: last_pfn = 0xfff0 max_arch_pfn = 0x400000000
+Mar 14 03:12:47 localhost kernel: PAT configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- UC  
+Mar 14 03:12:47 localhost kernel: CPU MTRRs all blank - virtualized system.
+Mar 14 03:12:47 localhost kernel: found SMP MP-table at [mem 0x0009fff0-0x0009ffff] mapped at [ffffffffff200ff0]
+Mar 14 03:12:47 localhost kernel: RAMDISK: [mem 0x0e21e000-0x0f1dbfff]
+Mar 14 03:12:47 localhost kernel: Early table checksum verification disabled
+Mar 14 03:12:47 localhost kernel: ACPI: RSDP 00000000000e0000 00024 (v02 VBOX  )
+Mar 14 03:12:47 localhost kernel: ACPI: XSDT 000000000fff0030 0003C (v01 VBOX   VBOXXSDT 00000001 ASL  00000061)
+Mar 14 03:12:47 localhost kernel: ACPI: FACP 000000000fff00f0 000F4 (v04 VBOX   VBOXFACP 00000001 ASL  00000061)
+Mar 14 03:12:47 localhost kernel: ACPI: DSDT 000000000fff0470 021FF (v02 VBOX   VBOXBIOS 00000002 INTL 20180105)
+Mar 14 03:12:47 localhost kernel: ACPI: FACS 000000000fff0200 00040
+Mar 14 03:12:47 localhost kernel: ACPI: APIC 000000000fff0240 00054 (v02 VBOX   VBOXAPIC 00000001 ASL  00000061)
+Mar 14 03:12:47 localhost kernel: ACPI: SSDT 000000000fff02a0 001CC (v01 VBOX   VBOXCPUT 00000002 INTL 20180105)
+Mar 14 03:12:47 localhost kernel: No NUMA configuration found
+Mar 14 03:12:47 localhost kernel: Faking a node at [mem 0x0000000000000000-0x000000000ffeffff]
+Mar 14 03:12:47 localhost kernel: NODE_DATA(0) allocated [mem 0x0ffc9000-0x0ffeffff]
+Mar 14 03:12:47 localhost kernel: crashkernel=auto resulted in zero bytes of reserved memory.
+Mar 14 03:12:47 localhost kernel: kvm-clock: Using msrs 4b564d01 and 4b564d00
+Mar 14 03:12:47 localhost kernel: kvm-clock: cpu 0, msr 0:ff79001, primary cpu clock
+Mar 14 03:12:47 localhost kernel: kvm-clock: using sched offset of 8471329642 cycles
+Mar 14 03:12:47 localhost kernel: Zone ranges:
+Mar 14 03:12:47 localhost kernel:  DMA      [mem 0x00001000-0x00ffffff]
+Mar 14 03:12:47 localhost kernel:  DMA32    [mem 0x01000000-0xffffffff]
+Mar 14 03:12:47 localhost kernel:  Normal   empty
+Mar 14 03:12:47 localhost kernel: Movable zone start for each node
+Mar 14 03:12:47 localhost kernel: Early memory node ranges
+Mar 14 03:12:47 localhost kernel:  node   0: [mem 0x00001000-0x0009efff]
+Mar 14 03:12:47 localhost kernel:  node   0: [mem 0x00100000-0x0ffeffff]
+Mar 14 03:12:47 localhost kernel: Initmem setup node 0 [mem 0x00001000-0x0ffeffff]
+Mar 14 03:12:47 localhost kernel: ACPI: PM-Timer IO Port: 0x4008
+Mar 14 03:12:47 localhost kernel: ACPI: LAPIC (acpi_id[0x00] lapic_id[0x00] enabled)
+Mar 14 03:12:47 localhost kernel: ACPI: IOAPIC (id[0x01] address[0xfec00000] gsi_base[0])
+Mar 14 03:12:47 localhost kernel: IOAPIC[0]: apic_id 1, version 32, address 0xfec00000, GSI 0-23
+Mar 14 03:12:47 localhost kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 0 global_irq 2 dfl dfl)
+Mar 14 03:12:47 localhost kernel: ACPI: INT_SRC_OVR (bus 0 bus_irq 9 global_irq 9 low level)
+Mar 14 03:12:47 localhost kernel: Using ACPI (MADT) for SMP configuration information
+Mar 14 03:12:47 localhost kernel: smpboot: Allowing 1 CPUs, 0 hotplug CPUs
+Mar 14 03:12:47 localhost kernel: PM: Registered nosave memory: [mem 0x0009f000-0x0009ffff]
+Mar 14 03:12:47 localhost kernel: PM: Registered nosave memory: [mem 0x000a0000-0x000effff]
+Mar 14 03:12:47 localhost kernel: PM: Registered nosave memory: [mem 0x000f0000-0x000fffff]
+Mar 14 03:12:47 localhost kernel: e820: [mem 0x10000000-0xfebfffff] available for PCI devices
+Mar 14 03:12:47 localhost kernel: Booting paravirtualized kernel on KVM
+Mar 14 03:12:47 localhost kernel: setup_percpu: NR_CPUS:5120 nr_cpumask_bits:1 nr_cpu_ids:1 nr_node_ids:1
+Mar 14 03:12:47 localhost kernel: PERCPU: Embedded 35 pages/cpu @ffff97c58fc00000 s104856 r8192 d30312 u2097152
+Mar 14 03:12:47 localhost kernel: PV qspinlock hash table entries: 256 (order: 0, 4096 bytes)
+Mar 14 03:12:47 localhost kernel: Built 1 zonelists in Node order, mobility grouping on.  Total pages: 64377
+Mar 14 03:12:47 localhost kernel: Policy zone: DMA32
+Mar 14 03:12:47 localhost kernel: Kernel command line: BOOT_IMAGE=/vmlinuz-3.10.0-862.2.3.el7.x86_64 root=/dev/mapper/VolGroup00-LogVol00 ro no_timer_check console=tty0 console=ttyS0,115200n8 net.ifnames=0 biosdevname=0 elevator=noop crashkernel=auto rd.lvm.lv=VolGroup00/LogVol00 rd.lvm.lv=VolGroup00/LogVol01 rhgb quiet
+Mar 14 03:12:47 localhost kernel: PID hash table entries: 1024 (order: 1, 8192 bytes)
+Mar 14 03:12:47 localhost kernel: x86/fpu: xstate_offset[2]: 0240, xstate_sizes[2]: 0100
+Mar 14 03:12:47 localhost kernel: xsave: enabled xstate_bv 0x7, cntxt size 0x340 using standard form
+Mar 14 03:12:47 localhost kernel: Memory: 221872k/262080k available (7324k kernel code, 392k absent, 39816k reserved, 6305k data, 1832k init)
+Mar 14 03:12:47 localhost kernel: SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=1, Nodes=1
+Mar 14 03:12:47 localhost kernel: x86/pti: Unmapping kernel while in userspace
+Mar 14 03:12:47 localhost kernel: Hierarchical RCU implementation.
+Mar 14 03:12:47 localhost kernel: #011RCU restricting CPUs from NR_CPUS=5120 to nr_cpu_ids=1.
+Mar 14 03:12:47 localhost kernel: NR_IRQS:327936 nr_irqs:256 0
+Mar 14 03:12:47 localhost kernel: Console: colour VGA+ 80x25
+Mar 14 03:12:47 localhost kernel: console [tty0] enabled
+Mar 14 03:12:47 localhost kernel: console [ttyS0] enabled
+Mar 14 03:12:47 localhost kernel: allocated 1048576 bytes of page_cgroup
+Mar 14 03:12:47 localhost kernel: please try 'cgroup_disable=memory' option if you don't want memory cgroups
+Mar 14 03:12:47 localhost kernel: tsc: Detected 1991.999 MHz processor
+Mar 14 03:12:47 localhost kernel: Calibrating delay loop (skipped) preset value.. 3983.99 BogoMIPS (lpj=1991999)
+Mar 14 03:12:47 localhost kernel: pid_max: default: 32768 minimum: 301
+Mar 14 03:12:47 localhost kernel: Security Framework initialized
+Mar 14 03:12:47 localhost kernel: SELinux:  Initializing.
+Mar 14 03:12:47 localhost kernel: Yama: becoming mindful.
+Mar 14 03:12:47 localhost kernel: Dentry cache hash table entries: 32768 (order: 6, 262144 bytes)
+Mar 14 03:12:47 localhost kernel: Inode-cache hash table entries: 16384 (order: 5, 131072 bytes)
+Mar 14 03:12:47 localhost kernel: Mount-cache hash table entries: 512 (order: 0, 4096 bytes)
+Mar 14 03:12:47 localhost kernel: Mountpoint-cache hash table entries: 512 (order: 0, 4096 bytes)
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys memory
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys devices
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys freezer
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys net_cls
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys blkio
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys perf_event
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys hugetlb
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys pids
+Mar 14 03:12:47 localhost kernel: Initializing cgroup subsys net_prio
+Mar 14 03:12:47 localhost kernel: CPU: Physical Processor ID: 0
+Mar 14 03:12:47 localhost kernel: mce: CPU supports 0 MCE banks
+Mar 14 03:12:47 localhost kernel: Last level iTLB entries: 4KB 0, 2MB 0, 4MB 0
+Mar 14 03:12:47 localhost kernel: Last level dTLB entries: 4KB 64, 2MB 0, 4MB 0
+Mar 14 03:12:47 localhost kernel: tlb_flushall_shift: 6
+Mar 14 03:12:47 localhost kernel: FEATURE SPEC_CTRL Not Present
+Mar 14 03:12:47 localhost kernel: FEATURE IBPB_SUPPORT Not Present
+Mar 14 03:12:47 localhost kernel: Spectre V2 : Vulnerable: Retpoline without IBPB
+Mar 14 03:12:47 localhost kernel: Freeing SMP alternatives: 24k freed
+Mar 14 03:12:47 localhost kernel: ACPI: Core revision 20130517
+Mar 14 03:12:47 localhost kernel: ACPI: All ACPI Tables successfully acquired
+Mar 14 03:12:47 localhost kernel: ftrace: allocating 28047 entries in 110 pages
+Mar 14 03:12:47 localhost kernel: Enabling x2apic
+Mar 14 03:12:47 localhost kernel: Enabled x2apic
+Mar 14 03:12:47 localhost kernel: Switched APIC routing to physical x2apic.
+Mar 14 03:12:47 localhost kernel: ..TIMER: vector=0x30 apic1=0 pin1=2 apic2=-1 pin2=-1
+Mar 14 03:12:47 localhost kernel: smpboot: CPU0: Intel(R) Core(TM) i3-6006U CPU @ 2.00GHz (fam: 06, model: 4e, stepping: 03)
+Mar 14 03:12:47 localhost kernel: APIC calibration not consistent with PM-Timer: 116ms instead of 100ms
+Mar 14 03:12:47 localhost kernel: APIC delta adjusted to PM-Timer: 6356611 (7436948)
+Mar 14 03:12:47 localhost kernel: Performance Events: unsupported p6 CPU model 78 no PMU driver, software events only.
+Mar 14 03:12:47 localhost kernel: KVM setup paravirtual spinlock
+Mar 14 03:12:47 localhost kernel: Brought up 1 CPUs
+Mar 14 03:12:47 localhost kernel: smpboot: Max logical packages: 1
+Mar 14 03:12:47 localhost kernel: smpboot: Total of 1 processors activated (3983.99 BogoMIPS)
+Mar 14 03:12:47 localhost kernel: devtmpfs: initialized
+Mar 14 03:12:47 localhost kernel: EVM: security.selinux
+Mar 14 03:12:47 localhost kernel: EVM: security.ima
+Mar 14 03:12:47 localhost kernel: EVM: security.capability
+Mar 14 03:12:47 localhost kernel: atomic64 test passed for x86-64 platform with CX8 and with SSE
+Mar 14 03:12:47 localhost kernel: pinctrl core: initialized pinctrl subsystem
+Mar 14 03:12:47 localhost kernel: RTC time:  3:12:46, date: 03/14/19
+Mar 14 03:12:47 localhost kernel: NET: Registered protocol family 16
+Mar 14 03:12:47 localhost kernel: ACPI: bus type PCI registered
+Mar 14 03:12:47 localhost kernel: acpiphp: ACPI Hot Plug PCI Controller Driver version: 0.5
+Mar 14 03:12:47 localhost kernel: PCI: Using configuration type 1 for base access
+Mar 14 03:12:47 localhost kernel: ACPI: Added _OSI(Module Device)
+Mar 14 03:12:47 localhost kernel: ACPI: Added _OSI(Processor Device)
+Mar 14 03:12:47 localhost kernel: ACPI: Added _OSI(3.0 _SCP Extensions)
+Mar 14 03:12:47 localhost kernel: ACPI: Added _OSI(Processor Aggregator Device)
+Mar 14 03:12:47 localhost kernel: ACPI: Executed 1 blocks of module-level executable AML code
+Mar 14 03:12:47 localhost kernel: ACPI: Interpreter enabled
+Mar 14 03:12:47 localhost kernel: ACPI: (supports S0 S5)
+Mar 14 03:12:47 localhost kernel: ACPI: Using IOAPIC for interrupt routing
+Mar 14 03:12:47 localhost kernel: PCI: Using host bridge windows from ACPI; if necessary, use "pci=nocrs" and report a bug
+Mar 14 03:12:47 localhost kernel: ACPI: Enabled 2 GPEs in block 00 to 07
+Mar 14 03:12:47 localhost kernel: ACPI: PCI Root Bridge [PCI0] (domain 0000 [bus 00-ff])
+Mar 14 03:12:47 localhost kernel: acpi PNP0A03:00: _OSC: OS supports [ASPM ClockPM Segments MSI]
+Mar 14 03:12:47 localhost kernel: acpi PNP0A03:00: _OSC: not requesting OS control; OS requires [ExtendedConfig ASPM ClockPM MSI]
+Mar 14 03:12:47 localhost kernel: acpi PNP0A03:00: fail to add MMCONFIG information, can't access extended PCI configuration space under this bridge.
+Mar 14 03:12:47 localhost kernel: PCI host bridge to bus 0000:00
+Mar 14 03:12:47 localhost kernel: pci_bus 0000:00: root bus resource [bus 00-ff]
+Mar 14 03:12:47 localhost kernel: pci_bus 0000:00: root bus resource [io  0x0000-0x0cf7 window]
+Mar 14 03:12:47 localhost kernel: pci_bus 0000:00: root bus resource [io  0x0d00-0xffff window]
+Mar 14 03:12:47 localhost kernel: pci_bus 0000:00: root bus resource [mem 0x000a0000-0x000bffff window]
+Mar 14 03:12:47 localhost kernel: pci_bus 0000:00: root bus resource [mem 0x10000000-0xfdffffff window]
+Mar 14 03:12:47 localhost kernel: pci 0000:00:01.1: legacy IDE quirk: reg 0x10: [io  0x01f0-0x01f7]
+Mar 14 03:12:47 localhost kernel: pci 0000:00:01.1: legacy IDE quirk: reg 0x14: [io  0x03f6]
+Mar 14 03:12:47 localhost kernel: pci 0000:00:01.1: legacy IDE quirk: reg 0x18: [io  0x0170-0x0177]
+Mar 14 03:12:47 localhost kernel: pci 0000:00:01.1: legacy IDE quirk: reg 0x1c: [io  0x0376]
+Mar 14 03:12:47 localhost kernel: pci 0000:00:07.0: quirk: [io  0x4000-0x403f] claimed by PIIX4 ACPI
+Mar 14 03:12:47 localhost kernel: pci 0000:00:07.0: quirk: [io  0x4100-0x410f] claimed by PIIX4 SMB
+Mar 14 03:12:47 localhost kernel: ACPI: PCI Interrupt Link [LNKA] (IRQs 5 9 10 *11)
+Mar 14 03:12:47 localhost kernel: ACPI: PCI Interrupt Link [LNKB] (IRQs 5 9 *10 11)
+Mar 14 03:12:47 localhost kernel: ACPI: PCI Interrupt Link [LNKC] (IRQs 5 *9 10 11)
+Mar 14 03:12:47 localhost kernel: ACPI: PCI Interrupt Link [LNKD] (IRQs 5 9 10 *11)
+Mar 14 03:12:47 localhost kernel: vgaarb: device added: PCI:0000:00:02.0,decodes=io+mem,owns=io+mem,locks=none
+Mar 14 03:12:47 localhost kernel: vgaarb: loaded
+Mar 14 03:12:47 localhost kernel: vgaarb: bridge control possible 0000:00:02.0
+Mar 14 03:12:47 localhost kernel: SCSI subsystem initialized
+Mar 14 03:12:47 localhost kernel: ACPI: bus type USB registered
+Mar 14 03:12:47 localhost kernel: usbcore: registered new interface driver usbfs
+Mar 14 03:12:47 localhost kernel: usbcore: registered new interface driver hub
+Mar 14 03:12:47 localhost kernel: usbcore: registered new device driver usb
+Mar 14 03:12:47 localhost kernel: EDAC MC: Ver: 3.0.0
+Mar 14 03:12:47 localhost kernel: PCI: Using ACPI for IRQ routing
+Mar 14 03:12:47 localhost kernel: NetLabel: Initializing
+Mar 14 03:12:47 localhost kernel: NetLabel:  domain hash size = 128
+Mar 14 03:12:47 localhost kernel: NetLabel:  protocols = UNLABELED CIPSOv4
+Mar 14 03:12:47 localhost kernel: NetLabel:  unlabeled traffic allowed by default
+Mar 14 03:12:47 localhost kernel: amd_nb: Cannot enumerate AMD northbridges
+Mar 14 03:12:47 localhost kernel: Switched to clocksource kvm-clock
+Mar 14 03:12:47 localhost kernel: pnp: PnP ACPI init
+Mar 14 03:12:47 localhost kernel: ACPI: bus type PNP registered
+Mar 14 03:12:47 localhost kernel: pnp: PnP ACPI: found 2 devices
+Mar 14 03:12:47 localhost kernel: ACPI: bus type PNP unregistered
+Mar 14 03:12:47 localhost kernel: NET: Registered protocol family 2
+Mar 14 03:12:47 localhost kernel: TCP established hash table entries: 2048 (order: 2, 16384 bytes)
+Mar 14 03:12:47 localhost kernel: TCP bind hash table entries: 2048 (order: 3, 32768 bytes)
+Mar 14 03:12:47 localhost kernel: TCP: Hash tables configured (established 2048 bind 2048)
+Mar 14 03:12:47 localhost kernel: TCP: reno registered
+Mar 14 03:12:47 localhost kernel: UDP hash table entries: 256 (order: 1, 8192 bytes)
+Mar 14 03:12:47 localhost kernel: UDP-Lite hash table entries: 256 (order: 1, 8192 bytes)
+Mar 14 03:12:47 localhost kernel: NET: Registered protocol family 1
+Mar 14 03:12:47 localhost kernel: pci 0000:00:00.0: Limiting direct PCI/PCI transfers
+Mar 14 03:12:47 localhost kernel: pci 0000:00:01.0: Activating ISA DMA hang workarounds
+Mar 14 03:12:47 localhost kernel: Unpacking initramfs...
+Mar 14 03:12:47 localhost kernel: Freeing initrd memory: 16120k freed
+Mar 14 03:12:47 localhost kernel: RAPL PMU: API unit is 2^-32 Joules, 5 fixed counters, 10737418240 ms ovfl timer
+Mar 14 03:12:47 localhost kernel: RAPL PMU: hw unit of domain pp0-core 2^-0 Joules
+Mar 14 03:12:47 localhost kernel: RAPL PMU: hw unit of domain package 2^-0 Joules
+Mar 14 03:12:47 localhost kernel: RAPL PMU: hw unit of domain dram 2^-0 Joules
+Mar 14 03:12:47 localhost kernel: RAPL PMU: hw unit of domain pp1-gpu 2^-0 Joules
+Mar 14 03:12:47 localhost kernel: RAPL PMU: hw unit of domain psys 2^-0 Joules
+Mar 14 03:12:47 localhost kernel: platform rtc_cmos: registered platform RTC device (no PNP device found)
+Mar 14 03:12:47 localhost kernel: sha1_ssse3: Using AVX optimized SHA-1 implementation
+Mar 14 03:12:47 localhost kernel: sha256_ssse3: Using AVX optimized SHA-256 implementation
+Mar 14 03:12:47 localhost kernel: futex hash table entries: 256 (order: 2, 16384 bytes)
+Mar 14 03:12:47 localhost kernel: Initialise system trusted keyring
+Mar 14 03:12:47 localhost kernel: audit: initializing netlink socket (disabled)
+Mar 14 03:12:47 localhost kernel: type=2000 audit(1552533176.668:1): initialized
+Mar 14 03:12:47 localhost kernel: HugeTLB registered 2 MB page size, pre-allocated 0 pages
+Mar 14 03:12:47 localhost kernel: zpool: loaded
+Mar 14 03:12:47 localhost kernel: zbud: loaded
+Mar 14 03:12:47 localhost kernel: VFS: Disk quotas dquot_6.5.2
+Mar 14 03:12:47 localhost kernel: Dquot-cache hash table entries: 512 (order 0, 4096 bytes)
+Mar 14 03:12:47 localhost kernel: msgmni has been set to 464
+Mar 14 03:12:47 localhost kernel: Key type big_key registered
+Mar 14 03:12:47 localhost kernel: NET: Registered protocol family 38
+Mar 14 03:12:47 localhost kernel: Key type asymmetric registered
+Mar 14 03:12:47 localhost kernel: Asymmetric key parser 'x509' registered
+Mar 14 03:12:47 localhost kernel: Block layer SCSI generic (bsg) driver version 0.4 loaded (major 248)
+Mar 14 03:12:47 localhost kernel: io scheduler noop registered (default)
+Mar 14 03:12:47 localhost kernel: io scheduler deadline registered
+Mar 14 03:12:47 localhost kernel: io scheduler cfq registered
+Mar 14 03:12:47 localhost kernel: io scheduler mq-deadline registered
+Mar 14 03:12:47 localhost kernel: io scheduler kyber registered
+Mar 14 03:12:47 localhost kernel: pci_hotplug: PCI Hot Plug PCI Core version: 0.5
+Mar 14 03:12:47 localhost kernel: pciehp: PCI Express Hot Plug Controller Driver version: 0.4
+Mar 14 03:12:47 localhost kernel: ACPI: AC Adapter [AC] (on-line)
+Mar 14 03:12:47 localhost kernel: input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+Mar 14 03:12:47 localhost kernel: ACPI: Power Button [PWRF]
+Mar 14 03:12:47 localhost kernel: input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+Mar 14 03:12:47 localhost kernel: ACPI: Sleep Button [SLPF]
+Mar 14 03:12:47 localhost kernel: GHES: HEST is not enabled!
+Mar 14 03:12:47 localhost kernel: ACPI: Battery Slot [BAT0] (battery present)
+Mar 14 03:12:47 localhost kernel: Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
+Mar 14 03:12:47 localhost kernel: Non-volatile memory driver v1.3
+Mar 14 03:12:47 localhost kernel: Linux agpgart interface v0.103
+Mar 14 03:12:47 localhost kernel: crash memory driver: version 1.1
+Mar 14 03:12:47 localhost kernel: rdac: device handler registered
+Mar 14 03:12:47 localhost kernel: hp_sw: device handler registered
+Mar 14 03:12:47 localhost kernel: emc: device handler registered
+Mar 14 03:12:47 localhost kernel: alua: device handler registered
+Mar 14 03:12:47 localhost kernel: libphy: Fixed MDIO Bus: probed
+Mar 14 03:12:47 localhost kernel: ehci_hcd: USB 2.0 'Enhanced' Host Controller (EHCI) Driver
+Mar 14 03:12:47 localhost kernel: ehci-pci: EHCI PCI platform driver
+Mar 14 03:12:47 localhost kernel: ohci_hcd: USB 1.1 'Open' Host Controller (OHCI) Driver
+Mar 14 03:12:47 localhost kernel: ohci-pci: OHCI PCI platform driver
+Mar 14 03:12:47 localhost kernel: uhci_hcd: USB Universal Host Controller Interface driver
+Mar 14 03:12:47 localhost kernel: usbcore: registered new interface driver usbserial
+Mar 14 03:12:47 localhost kernel: usbcore: registered new interface driver usbserial_generic
+Mar 14 03:12:47 localhost kernel: usbserial: USB Serial support registered for generic
+Mar 14 03:12:47 localhost kernel: i8042: PNP: PS/2 Controller [PNP0303:PS2K,PNP0f03:PS2M] at 0x60,0x64 irq 1,12
+Mar 14 03:12:47 localhost kernel: serio: i8042 KBD port at 0x60,0x64 irq 1
+Mar 14 03:12:47 localhost kernel: serio: i8042 AUX port at 0x60,0x64 irq 12
+Mar 14 03:12:47 localhost kernel: mousedev: PS/2 mouse device common for all mice
+Mar 14 03:12:47 localhost kernel: input: AT Translated Set 2 keyboard as /devices/platform/i8042/serio0/input/input2
+Mar 14 03:12:47 localhost kernel: rtc_cmos rtc_cmos: rtc core: registered rtc_cmos as rtc0
+Mar 14 03:12:47 localhost kernel: rtc_cmos rtc_cmos: alarms up to one day, 114 bytes nvram
+Mar 14 03:12:47 localhost kernel: cpuidle: using governor menu
+Mar 14 03:12:47 localhost kernel: hidraw: raw HID events driver (C) Jiri Kosina
+Mar 14 03:12:47 localhost kernel: usbcore: registered new interface driver usbhid
+Mar 14 03:12:47 localhost kernel: usbhid: USB HID core driver
+Mar 14 03:12:47 localhost kernel: drop_monitor: Initializing network drop monitor service
+Mar 14 03:12:47 localhost kernel: TCP: cubic registered
+Mar 14 03:12:47 localhost kernel: Initializing XFRM netlink socket
+Mar 14 03:12:47 localhost kernel: NET: Registered protocol family 10
+Mar 14 03:12:47 localhost kernel: NET: Registered protocol family 17
+Mar 14 03:12:47 localhost kernel: mpls_gso: MPLS GSO support
+Mar 14 03:12:47 localhost kernel: microcode: CPU0 sig=0x406e3, pf=0x2, revision=0x0
+Mar 14 03:12:47 localhost kernel: microcode: Microcode Update Driver: v2.01 <tigran@aivazian.fsnet.co.uk>, Peter Oruba
+Mar 14 03:12:47 localhost kernel: Loading compiled-in X.509 certificates
+Mar 14 03:12:47 localhost kernel: Loaded X.509 cert 'CentOS Linux kpatch signing key: ea0413152cde1d98ebdca3fe6f0230904c9ef717'
+Mar 14 03:12:47 localhost kernel: Loaded X.509 cert 'CentOS Linux Driver update signing key: 7f421ee0ab69461574bb358861dbe77762a4201b'
+Mar 14 03:12:47 localhost kernel: Loaded X.509 cert 'CentOS Linux kernel signing key: 666ef031933f5127062372832ce9ba8a49005c8f'
+Mar 14 03:12:47 localhost kernel: registered taskstats version 1
+Mar 14 03:12:47 localhost kernel: Key type trusted registered
+Mar 14 03:12:47 localhost kernel: Key type encrypted registered
+Mar 14 03:12:47 localhost kernel: IMA: No TPM chip found, activating TPM-bypass! (rc=-19)
+Mar 14 03:12:47 localhost kernel:  Magic number: 11:515:209
+Mar 14 03:12:47 localhost kernel: rtc_cmos rtc_cmos: setting system clock to 2019-03-14 03:12:47 UTC (1552533167)
+Mar 14 03:12:47 localhost kernel: Freeing unused kernel memory: 1832k freed
+Mar 14 03:12:47 localhost kernel: Write protecting the kernel read-only data: 12288k
+Mar 14 03:12:47 localhost kernel: Freeing unused kernel memory: 856k freed
+Mar 14 03:12:47 localhost kernel: Freeing unused kernel memory: 684k freed
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost systemd[1]: systemd 219 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 -SECCOMP +BLKID +ELFUTILS +KMOD +IDN)
+Mar 14 03:12:47 localhost systemd[1]: Detected virtualization kvm.
+Mar 14 03:12:47 localhost systemd[1]: Detected architecture x86-64.
+Mar 14 03:12:47 localhost systemd[1]: Running in initial RAM disk.
+Mar 14 03:12:47 localhost systemd[1]: Set hostname to <localhost.localdomain>.
+Mar 14 03:12:47 localhost systemd[1]: Initializing machine ID from KVM UUID.
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost kernel: random: systemd: uninitialized urandom read (16 bytes read)
+Mar 14 03:12:47 localhost systemd[1]: Reached target Timers.
+Mar 14 03:12:47 localhost systemd[1]: Starting Timers.
+Mar 14 03:12:47 localhost systemd[1]: Created slice Root Slice.
+Mar 14 03:12:47 localhost systemd[1]: Starting Root Slice.
+Mar 14 03:12:47 localhost systemd[1]: Listening on udev Control Socket.
+Mar 14 03:12:47 localhost systemd[1]: Starting udev Control Socket.
+Mar 14 03:12:47 localhost systemd[1]: Listening on Journal Socket.
+Mar 14 03:12:47 localhost systemd[1]: Starting Journal Socket.
+Mar 14 03:12:47 localhost systemd[1]: Reached target Swap.
+Mar 14 03:12:47 localhost systemd[1]: Starting Swap.
+Mar 14 03:12:47 localhost systemd[1]: Listening on udev Kernel Socket.
+Mar 14 03:12:47 localhost systemd[1]: Starting udev Kernel Socket.
+Mar 14 03:12:47 localhost systemd[1]: Reached target Sockets.
+Mar 14 03:12:47 localhost systemd[1]: Starting Sockets.
+Mar 14 03:12:47 localhost systemd[1]: Reached target Local File Systems.
+Mar 14 03:12:47 localhost systemd[1]: Starting Local File Systems.
+Mar 14 03:12:47 localhost systemd[1]: Created slice System Slice.
+Mar 14 03:12:47 localhost systemd[1]: Starting System Slice.
+Mar 14 03:12:47 localhost systemd[1]: Starting Setup Virtual Console...
+Mar 14 03:12:47 localhost systemd[1]: Starting Create list of required static device nodes for the current kernel...
+Mar 14 03:12:47 localhost systemd[1]: Starting Journal Service...
+Mar 14 03:12:47 localhost systemd[1]: Starting Apply Kernel Variables...
+Mar 14 03:12:47 localhost systemd[1]: Reached target Slices.
+Mar 14 03:12:47 localhost systemd[1]: Starting Slices.
+Mar 14 03:12:47 localhost systemd[1]: Starting dracut cmdline hook...
+Mar 14 03:12:47 localhost systemd[1]: Started Create list of required static device nodes for the current kernel.
+Mar 14 03:12:47 localhost systemd[1]: Started Apply Kernel Variables.
+Mar 14 03:12:47 localhost systemd[1]: Starting Create Static Device Nodes in /dev...
+Mar 14 03:12:47 localhost systemd[1]: Started Create Static Device Nodes in /dev.
+Mar 14 03:12:47 localhost journal: Journal started
+Mar 14 03:12:47 localhost systemd[1]: Started Journal Service.
+Mar 14 03:12:47 localhost kernel: psmouse serio1: alps: Unknown ALPS touchpad: E7=10 00 64, EC=10 00 64
+Mar 14 03:12:47 localhost kernel: input: ImExPS/2 Generic Explorer Mouse as /devices/platform/i8042/serio1/input/input3
+Mar 14 03:12:47 localhost systemd: Started Setup Virtual Console.
+Mar 14 03:12:47 localhost systemd: Started dracut cmdline hook.
+Mar 14 03:12:47 localhost systemd: Starting dracut pre-udev hook...
+Mar 14 03:12:47 localhost kernel: device-mapper: uevent: version 1.0.3
+Mar 14 03:12:47 localhost kernel: device-mapper: ioctl: 4.37.0-ioctl (2017-09-20) initialised: dm-devel@redhat.com
+Mar 14 03:12:47 localhost systemd: Started dracut pre-udev hook.
+Mar 14 03:12:47 localhost systemd: Starting udev Kernel Device Manager...
+Mar 14 03:12:47 localhost systemd-udevd: starting version 219
+Mar 14 03:12:47 localhost systemd-udevd: Network interface NamePolicy= disabled on kernel command line, ignoring.
+Mar 14 03:12:47 localhost systemd: Started udev Kernel Device Manager.
+Mar 14 03:12:47 localhost systemd: Starting udev Coldplug all Devices...
+Mar 14 03:12:47 localhost systemd: Mounting Configuration File System...
+Mar 14 03:12:47 localhost systemd: Mounted Configuration File System.
+Mar 14 03:12:47 localhost systemd: Started udev Coldplug all Devices.
+Mar 14 03:12:47 localhost systemd: Reached target System Initialization.
+Mar 14 03:12:47 localhost systemd: Starting System Initialization.
+Mar 14 03:12:47 localhost systemd: Starting Show Plymouth Boot Screen...
+Mar 14 03:12:47 localhost systemd: Starting dracut initqueue hook...
+Mar 14 03:12:48 localhost systemd: Started Show Plymouth Boot Screen.
+Mar 14 03:12:48 localhost systemd: Started Forward Password Requests to Plymouth Directory Watch.
+Mar 14 03:12:48 localhost systemd: Starting Forward Password Requests to Plymouth Directory Watch.
+Mar 14 03:12:48 localhost systemd: Reached target Paths.
+Mar 14 03:12:48 localhost systemd: Starting Paths.
+Mar 14 03:12:48 localhost systemd: Reached target Basic System.
+Mar 14 03:12:48 localhost systemd: Starting Basic System.
+Mar 14 03:12:48 localhost kernel: scsi host0: ata_piix
+Mar 14 03:12:48 localhost kernel: scsi host1: ata_piix
+Mar 14 03:12:48 localhost kernel: ata1: PATA max UDMA/33 cmd 0x1f0 ctl 0x3f6 bmdma 0xd000 irq 14
+Mar 14 03:12:48 localhost kernel: ata2: PATA max UDMA/33 cmd 0x170 ctl 0x376 bmdma 0xd008 irq 15
+Mar 14 03:12:48 localhost kernel: ahci 0000:00:0d.0: SSS flag set, parallel bus scan disabled
+Mar 14 03:12:48 localhost kernel: ahci 0000:00:0d.0: AHCI 0001.0100 32 slots 30 ports 3 Gbps 0x3fffffff impl SATA mode
+Mar 14 03:12:48 localhost kernel: ahci 0000:00:0d.0: flags: 64bit ncq stag only ccc 
+Mar 14 03:12:48 localhost kernel: scsi host2: ahci
+Mar 14 03:12:48 localhost kernel: scsi host3: ahci
+Mar 14 03:12:48 localhost kernel: scsi host4: ahci
+Mar 14 03:12:48 localhost kernel: scsi host5: ahci
+Mar 14 03:12:48 localhost kernel: scsi host6: ahci
+Mar 14 03:12:48 localhost kernel: scsi host7: ahci
+Mar 14 03:12:48 localhost kernel: scsi host8: ahci
+Mar 14 03:12:48 localhost kernel: scsi host9: ahci
+Mar 14 03:12:48 localhost kernel: scsi host10: ahci
+Mar 14 03:12:48 localhost kernel: scsi host11: ahci
+Mar 14 03:12:48 localhost kernel: scsi host12: ahci
+Mar 14 03:12:48 localhost kernel: scsi host13: ahci
+Mar 14 03:12:48 localhost kernel: scsi host14: ahci
+Mar 14 03:12:48 localhost kernel: scsi host15: ahci
+Mar 14 03:12:48 localhost kernel: scsi host16: ahci
+Mar 14 03:12:48 localhost kernel: scsi host17: ahci
+Mar 14 03:12:48 localhost kernel: scsi host18: ahci
+Mar 14 03:12:48 localhost kernel: scsi host19: ahci
+Mar 14 03:12:48 localhost kernel: scsi host20: ahci
+Mar 14 03:12:48 localhost kernel: scsi host21: ahci
+Mar 14 03:12:48 localhost kernel: scsi host22: ahci
+Mar 14 03:12:48 localhost kernel: scsi host23: ahci
+Mar 14 03:12:48 localhost kernel: scsi host24: ahci
+Mar 14 03:12:48 localhost kernel: scsi host25: ahci
+Mar 14 03:12:48 localhost kernel: scsi host26: ahci
+Mar 14 03:12:48 localhost kernel: scsi host27: ahci
+Mar 14 03:12:48 localhost kernel: scsi host28: ahci
+Mar 14 03:12:48 localhost kernel: scsi host29: ahci
+Mar 14 03:12:48 localhost kernel: scsi host30: ahci
+Mar 14 03:12:48 localhost kernel: scsi host31: ahci
+Mar 14 03:12:48 localhost kernel: ata3: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840100 irq 21
+Mar 14 03:12:48 localhost kernel: ata4: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840180 irq 21
+Mar 14 03:12:48 localhost kernel: ata5: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840200 irq 21
+Mar 14 03:12:48 localhost kernel: ata6: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840280 irq 21
+Mar 14 03:12:48 localhost kernel: ata7: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840300 irq 21
+Mar 14 03:12:48 localhost kernel: ata8: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840380 irq 21
+Mar 14 03:12:48 localhost kernel: ata9: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840400 irq 21
+Mar 14 03:12:48 localhost kernel: ata10: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840480 irq 21
+Mar 14 03:12:48 localhost kernel: ata11: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840500 irq 21
+Mar 14 03:12:48 localhost kernel: ata12: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840580 irq 21
+Mar 14 03:12:48 localhost kernel: ata13: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840600 irq 21
+Mar 14 03:12:48 localhost kernel: ata14: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840680 irq 21
+Mar 14 03:12:48 localhost kernel: ata15: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840700 irq 21
+Mar 14 03:12:48 localhost kernel: ata16: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840780 irq 21
+Mar 14 03:12:48 localhost kernel: ata17: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840800 irq 21
+Mar 14 03:12:48 localhost kernel: ata18: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840880 irq 21
+Mar 14 03:12:48 localhost kernel: ata19: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840900 irq 21
+Mar 14 03:12:48 localhost kernel: ata20: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840980 irq 21
+Mar 14 03:12:48 localhost kernel: ata21: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840a00 irq 21
+Mar 14 03:12:48 localhost kernel: ata22: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840a80 irq 21
+Mar 14 03:12:48 localhost kernel: ata23: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840b00 irq 21
+Mar 14 03:12:48 localhost kernel: ata24: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840b80 irq 21
+Mar 14 03:12:48 localhost kernel: ata25: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840c00 irq 21
+Mar 14 03:12:48 localhost kernel: ata26: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840c80 irq 21
+Mar 14 03:12:48 localhost kernel: ata27: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840d00 irq 21
+Mar 14 03:12:48 localhost kernel: ata28: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840d80 irq 21
+Mar 14 03:12:48 localhost kernel: ata29: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840e00 irq 21
+Mar 14 03:12:48 localhost kernel: ata30: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840e80 irq 21
+Mar 14 03:12:48 localhost kernel: ata31: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840f00 irq 21
+Mar 14 03:12:48 localhost kernel: ata32: SATA max UDMA/133 abar m8192@0xf0840000 port 0xf0840f80 irq 21
+Mar 14 03:12:48 localhost kernel: ata1.00: ATA-6: VBOX HARDDISK, 1.0, max UDMA/133
+Mar 14 03:12:48 localhost kernel: ata1.00: 83886080 sectors, multi 128: LBA 
+Mar 14 03:12:48 localhost kernel: ata1.00: configured for UDMA/33
+Mar 14 03:12:48 localhost kernel: scsi 0:0:0:0: Direct-Access     ATA      VBOX HARDDISK    1.0  PQ: 0 ANSI: 5
+Mar 14 03:12:48 localhost kernel: tsc: Refined TSC clocksource calibration: 1990.988 MHz
+Mar 14 03:12:48 localhost kernel: ata3: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:48 localhost kernel: ata4: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+Mar 14 03:12:48 localhost kernel: ata4.00: ATA-6: VBOX HARDDISK, 1.0, max UDMA/133
+Mar 14 03:12:48 localhost kernel: ata4.00: 20971520 sectors, multi 128: LBA48 NCQ (depth 31/32)
+Mar 14 03:12:48 localhost kernel: ata4.00: configured for UDMA/133
+Mar 14 03:12:48 localhost kernel: scsi 3:0:0:0: Direct-Access     ATA      VBOX HARDDISK    1.0  PQ: 0 ANSI: 5
+Mar 14 03:12:49 localhost kernel: ata5: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+Mar 14 03:12:49 localhost kernel: ata5.00: ATA-6: VBOX HARDDISK, 1.0, max UDMA/133
+Mar 14 03:12:49 localhost kernel: ata5.00: 4194304 sectors, multi 128: LBA48 NCQ (depth 31/32)
+Mar 14 03:12:49 localhost kernel: ata5.00: configured for UDMA/133
+Mar 14 03:12:49 localhost kernel: scsi 4:0:0:0: Direct-Access     ATA      VBOX HARDDISK    1.0  PQ: 0 ANSI: 5
+Mar 14 03:12:49 localhost kernel: ata6: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+Mar 14 03:12:49 localhost kernel: ata6.00: ATA-6: VBOX HARDDISK, 1.0, max UDMA/133
+Mar 14 03:12:49 localhost kernel: ata6.00: 2097152 sectors, multi 128: LBA48 NCQ (depth 31/32)
+Mar 14 03:12:49 localhost kernel: ata6.00: configured for UDMA/133
+Mar 14 03:12:49 localhost kernel: scsi 5:0:0:0: Direct-Access     ATA      VBOX HARDDISK    1.0  PQ: 0 ANSI: 5
+Mar 14 03:12:49 localhost kernel: ata7: SATA link up 3.0 Gbps (SStatus 123 SControl 300)
+Mar 14 03:12:49 localhost kernel: ata7.00: ATA-6: VBOX HARDDISK, 1.0, max UDMA/133
+Mar 14 03:12:49 localhost kernel: ata7.00: 2097152 sectors, multi 128: LBA48 NCQ (depth 31/32)
+Mar 14 03:12:49 localhost kernel: ata7.00: configured for UDMA/133
+Mar 14 03:12:49 localhost kernel: scsi 6:0:0:0: Direct-Access     ATA      VBOX HARDDISK    1.0  PQ: 0 ANSI: 5
+Mar 14 03:12:50 localhost kernel: ata8: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:50 localhost kernel: ata9: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:50 localhost kernel: ata10: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:51 localhost kernel: ata11: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:51 localhost kernel: ata12: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:51 localhost kernel: ata13: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:51 localhost kernel: ata14: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:52 localhost kernel: ata15: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:52 localhost kernel: ata16: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:52 localhost kernel: ata17: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:53 localhost systemd: Received SIGRTMIN+20 from PID 222 (plymouthd).
+Mar 14 03:12:53 localhost kernel: ata18: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:53 localhost kernel: ata19: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:53 localhost kernel: ata20: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:54 localhost kernel: ata21: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:54 localhost kernel: ata22: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:54 localhost kernel: ata23: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:55 localhost kernel: ata24: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:55 localhost kernel: ata25: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:55 localhost kernel: ata26: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:55 localhost kernel: ata27: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:56 localhost kernel: ata28: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:56 localhost kernel: ata29: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:56 localhost kernel: ata30: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:57 localhost kernel: ata31: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:57 localhost kernel: ata32: SATA link down (SStatus 0 SControl 300)
+Mar 14 03:12:57 localhost kernel: sd 0:0:0:0: [sda] 83886080 512-byte logical blocks: (42.9 GB/40.0 GiB)
+Mar 14 03:12:57 localhost kernel: sd 0:0:0:0: [sda] Write Protect is off
+Mar 14 03:12:57 localhost kernel: sd 0:0:0:0: [sda] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Mar 14 03:12:57 localhost kernel: sda: sda1 sda2 sda3
+Mar 14 03:12:57 localhost kernel: sd 0:0:0:0: [sda] Attached SCSI disk
+Mar 14 03:12:57 localhost kernel: sd 3:0:0:0: [sdb] 20971520 512-byte logical blocks: (10.7 GB/10.0 GiB)
+Mar 14 03:12:57 localhost kernel: sd 3:0:0:0: [sdb] Write Protect is off
+Mar 14 03:12:57 localhost kernel: sd 3:0:0:0: [sdb] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Mar 14 03:12:57 localhost kernel: sd 4:0:0:0: [sdc] 4194304 512-byte logical blocks: (2.14 GB/2.00 GiB)
+Mar 14 03:12:57 localhost kernel: sd 4:0:0:0: [sdc] Write Protect is off
+Mar 14 03:12:57 localhost kernel: sd 4:0:0:0: [sdc] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Mar 14 03:12:57 localhost kernel: sd 4:0:0:0: [sdc] Attached SCSI disk
+Mar 14 03:12:57 localhost kernel: sd 3:0:0:0: [sdb] Attached SCSI disk
+Mar 14 03:12:57 localhost kernel: sd 5:0:0:0: [sdd] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+Mar 14 03:12:57 localhost kernel: sd 5:0:0:0: [sdd] Write Protect is off
+Mar 14 03:12:57 localhost kernel: sd 5:0:0:0: [sdd] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Mar 14 03:12:57 localhost kernel: sd 5:0:0:0: [sdd] Attached SCSI disk
+Mar 14 03:12:57 localhost kernel: sd 6:0:0:0: [sde] 2097152 512-byte logical blocks: (1.07 GB/1.00 GiB)
+Mar 14 03:12:57 localhost kernel: sd 6:0:0:0: [sde] Write Protect is off
+Mar 14 03:12:57 localhost kernel: sd 6:0:0:0: [sde] Write cache: enabled, read cache: enabled, doesn't support DPO or FUA
+Mar 14 03:12:57 localhost kernel: sd 6:0:0:0: [sde] Attached SCSI disk
+Mar 14 03:12:57 localhost kernel: random: fast init done
+Mar 14 03:12:57 localhost systemd: Found device /dev/mapper/VolGroup00-LogVol00.
+Mar 14 03:12:57 localhost systemd: Starting File System Check on /dev/mapper/VolGroup00-LogVol00...
+Mar 14 03:12:57 localhost kernel: random: crng init done
+Mar 14 03:12:57 localhost systemd-fsck: /sbin/fsck.xfs: XFS file system.
+Mar 14 03:12:57 localhost systemd: Started File System Check on /dev/mapper/VolGroup00-LogVol00.
+Mar 14 03:12:57 localhost systemd: Started dracut initqueue hook.
+Mar 14 03:12:57 localhost systemd: Reached target Remote File Systems (Pre).
+Mar 14 03:12:57 localhost systemd: Starting Remote File Systems (Pre).
+Mar 14 03:12:57 localhost systemd: Reached target Remote File Systems.
+Mar 14 03:12:57 localhost systemd: Starting Remote File Systems.
+Mar 14 03:12:57 localhost systemd: Mounting /sysroot...
+Mar 14 03:12:57 localhost kernel: SGI XFS with ACLs, security attributes, no debug enabled
+Mar 14 03:12:57 localhost kernel: XFS (dm-0): Mounting V5 Filesystem
+Mar 14 03:12:57 localhost kernel: XFS (dm-0): Ending clean mount
+Mar 14 03:12:57 localhost systemd: Mounted /sysroot.
+Mar 14 03:12:57 localhost systemd: Reached target Initrd Root File System.
+Mar 14 03:12:57 localhost systemd: Starting Initrd Root File System.
+Mar 14 03:12:57 localhost systemd: Starting Reload Configuration from the Real Root...
+Mar 14 03:12:57 localhost systemd: Reloading.
+Mar 14 03:12:58 localhost systemd: Started Reload Configuration from the Real Root.
+Mar 14 03:12:58 localhost systemd: Reached target Initrd File Systems.
+Mar 14 03:12:58 localhost systemd: Starting Initrd File Systems.
+Mar 14 03:12:58 localhost systemd: Reached target Initrd Default Target.
+Mar 14 03:12:58 localhost systemd: Starting Initrd Default Target.
+Mar 14 03:12:58 localhost systemd: Starting dracut pre-pivot and cleanup hook...
+Mar 14 03:12:58 localhost systemd: Started dracut pre-pivot and cleanup hook.
+Mar 14 03:12:58 localhost systemd: Starting Cleaning Up and Shutting Down Daemons...
+Mar 14 03:12:58 localhost systemd: Starting Plymouth switch root service...
+Mar 14 03:12:58 localhost systemd: Stopped target Timers.
+Mar 14 03:12:58 localhost systemd: Stopping Timers.
+Mar 14 03:12:58 localhost systemd: Stopped Cleaning Up and Shutting Down Daemons.
+Mar 14 03:12:58 localhost systemd: Stopped dracut pre-pivot and cleanup hook.
+Mar 14 03:12:58 localhost systemd: Stopping dracut pre-pivot and cleanup hook...
+Mar 14 03:12:58 localhost systemd: Stopped target Initrd Default Target.
+Mar 14 03:12:58 localhost systemd: Stopping Initrd Default Target.
+Mar 14 03:12:58 localhost systemd: Stopped target Remote File Systems.
+Mar 14 03:12:58 localhost systemd: Stopping Remote File Systems.
+Mar 14 03:12:58 localhost systemd: Stopped target Remote File Systems (Pre).
+Mar 14 03:12:58 localhost systemd: Stopping Remote File Systems (Pre).
+Mar 14 03:12:58 localhost systemd: Stopped dracut initqueue hook.
+Mar 14 03:12:58 localhost systemd: Stopping dracut initqueue hook...
+Mar 14 03:12:58 localhost systemd: Stopped target Basic System.
+Mar 14 03:12:58 localhost systemd: Stopping Basic System.
+Mar 14 03:12:58 localhost systemd: Stopped target Slices.
+Mar 14 03:12:58 localhost systemd: Stopping Slices.
+Mar 14 03:12:58 localhost systemd: Stopped target System Initialization.
+Mar 14 03:12:58 localhost systemd: Stopping System Initialization.
+Mar 14 03:12:58 localhost systemd: Stopped Apply Kernel Variables.
+Mar 14 03:12:58 localhost systemd: Stopping Apply Kernel Variables...
+Mar 14 03:12:58 localhost systemd: Stopped target Local File Systems.
+Mar 14 03:12:58 localhost systemd: Stopping Local File Systems.
+Mar 14 03:12:58 localhost systemd: Stopping udev Kernel Device Manager...
+Mar 14 03:12:58 localhost systemd: Stopped target Swap.
+Mar 14 03:12:58 localhost systemd: Stopping Swap.
+Mar 14 03:12:58 localhost systemd: Stopped udev Coldplug all Devices.
+Mar 14 03:12:58 localhost systemd: Stopping udev Coldplug all Devices...
+Mar 14 03:12:58 localhost systemd: Stopped target Sockets.
+Mar 14 03:12:58 localhost systemd: Stopping Sockets.
+Mar 14 03:12:58 localhost systemd: Stopped target Paths.
+Mar 14 03:12:58 localhost systemd: Stopping Paths.
+Mar 14 03:12:58 localhost systemd: Stopped udev Kernel Device Manager.
+Mar 14 03:12:58 localhost systemd: Stopped dracut pre-udev hook.
+Mar 14 03:12:58 localhost systemd: Stopping dracut pre-udev hook...
+Mar 14 03:12:58 localhost systemd: Stopped dracut cmdline hook.
+Mar 14 03:12:58 localhost systemd: Stopping dracut cmdline hook...
+Mar 14 03:12:58 localhost systemd: Stopped Create Static Device Nodes in /dev.
+Mar 14 03:12:58 localhost systemd: Stopping Create Static Device Nodes in /dev...
+Mar 14 03:12:58 localhost systemd: Stopped Create list of required static device nodes for the current kernel.
+Mar 14 03:12:58 localhost systemd: Stopping Create list of required static device nodes for the current kernel...
+Mar 14 03:12:58 localhost systemd: Closed udev Kernel Socket.
+Mar 14 03:12:58 localhost systemd: Stopping udev Kernel Socket.
+Mar 14 03:12:58 localhost systemd: Closed udev Control Socket.
+Mar 14 03:12:58 localhost systemd: Stopping udev Control Socket.
+Mar 14 03:12:58 localhost systemd: Starting Cleanup udevd DB...
+Mar 14 03:12:58 localhost systemd: Started Cleanup udevd DB.
+Mar 14 03:12:58 localhost systemd: Reached target Switch Root.
+Mar 14 03:12:58 localhost systemd: Starting Switch Root.
+Mar 14 03:12:58 localhost systemd: Started Plymouth switch root service.
+Mar 14 03:12:58 localhost systemd: Starting Switch Root...
+Mar 14 03:12:58 localhost systemd: Switching root.
+Mar 14 03:12:58 localhost journal: Journal stopped
+Mar 14 03:12:58 localhost journal: Runtime journal is using 4.0M (max allowed 11.7M, trying to leave 17.6M free of 113.8M available → current limit 11.7M).
+Mar 14 03:12:58 localhost systemd-journald[85]: Received SIGTERM from PID 1 (systemd).
+Mar 14 03:12:58 localhost kernel: type=1404 audit(1552533178.161:2): enforcing=1 old_enforcing=0 auid=4294967295 ses=4294967295
+Mar 14 03:12:58 localhost kernel: type=1403 audit(1552533178.288:3): policy loaded auid=4294967295 ses=4294967295
+Mar 14 03:12:58 localhost systemd[1]: Successfully loaded SELinux policy in 138.129ms.
+Mar 14 03:12:58 localhost kernel: ip_tables: (C) 2000-2006 Netfilter Core Team
+Mar 14 03:12:58 localhost systemd[1]: Inserted module 'ip_tables'
+Mar 14 03:12:58 localhost systemd[1]: Relabelled /dev and /run in 18.433ms.
+Mar 14 03:12:58 localhost journal: Journal started
+Mar 14 03:12:58 localhost systemd: systemd 219 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 -SECCOMP +BLKID +ELFUTILS +KMOD +IDN)
+Mar 14 03:12:58 localhost systemd: Detected virtualization kvm.
+Mar 14 03:12:58 localhost systemd: Detected architecture x86-64.
+Mar 14 03:12:58 localhost systemd: Set hostname to <localhost.localdomain>.
+Mar 14 03:12:58 localhost systemd: Initializing machine ID from KVM UUID.
+Mar 14 03:12:58 localhost systemd: Installed transient /etc/machine-id file.
+Mar 14 03:12:58 localhost systemd: Started Create list of required static device nodes for the current kernel.
+Mar 14 03:12:58 localhost systemd: Started Read and set NIS domainname from /etc/sysconfig/network.
+Mar 14 03:12:58 localhost systemd: Started Apply Kernel Variables.
+Mar 14 03:12:58 localhost systemd: Started Remount Root and Kernel File Systems.
+Mar 14 03:12:58 localhost systemd: Starting Load/Save Random Seed...
+Mar 14 03:12:58 localhost systemd: Starting Rebuild Hardware Database...
+Mar 14 03:12:58 localhost systemd: Starting Configure read-only root support...
+Mar 14 03:12:58 localhost systemd: Starting Create Static Device Nodes in /dev...
+Mar 14 03:12:58 localhost systemd: Starting Flush Journal to Persistent Storage...
+Mar 14 03:12:58 localhost systemd: Started Load/Save Random Seed.
+Mar 14 03:12:58 localhost systemd: Started LVM2 metadata daemon.
+Mar 14 03:12:58 localhost systemd: Starting LVM2 metadata daemon...
+Mar 14 03:12:58 localhost systemd: Started Flush Journal to Persistent Storage.
+Mar 14 03:12:58 localhost systemd: Started Create Static Device Nodes in /dev.
+Mar 14 03:12:58 localhost systemd: Starting udev Kernel Device Manager...
+Mar 14 03:12:58 localhost systemd: Started Configure read-only root support.
+Mar 14 03:12:58 localhost systemd-udevd: starting version 219
+Mar 14 03:12:58 localhost systemd-udevd: Network interface NamePolicy= disabled on kernel command line, ignoring.
+Mar 14 03:12:58 localhost systemd: Started udev Kernel Device Manager.
+Mar 14 03:12:59 localhost systemd: Started Rebuild Hardware Database.
+Mar 14 03:12:59 localhost systemd: Starting udev Coldplug all Devices...
+Mar 14 03:12:59 localhost systemd-udevd: Network interface NamePolicy= disabled on kernel command line, ignoring.
+Mar 14 03:12:59 localhost systemd: Started udev Coldplug all Devices.
+Mar 14 03:12:59 localhost kernel: ACPI: Video Device [GFX0] (multi-head: yes  rom: no  post: no)
+Mar 14 03:12:59 localhost kernel: input: Video Bus as /devices/LNXSYSTM:00/device:00/PNP0A03:00/LNXVIDEO:00/input/input4
+Mar 14 03:12:59 localhost kernel: e1000: Intel(R) PRO/1000 Network Driver - version 7.3.21-k8-NAPI
+Mar 14 03:12:59 localhost kernel: e1000: Copyright (c) 1999-2006 Intel Corporation.
+Mar 14 03:12:59 localhost kernel: sd 0:0:0:0: Attached scsi generic sg0 type 0
+Mar 14 03:12:59 localhost kernel: sd 3:0:0:0: Attached scsi generic sg1 type 0
+Mar 14 03:12:59 localhost kernel: sd 4:0:0:0: Attached scsi generic sg2 type 0
+Mar 14 03:12:59 localhost kernel: sd 5:0:0:0: Attached scsi generic sg3 type 0
+Mar 14 03:12:59 localhost kernel: sd 6:0:0:0: Attached scsi generic sg4 type 0
+Mar 14 03:12:59 localhost systemd: Created slice system-lvm2\x2dpvscan.slice.
+Mar 14 03:12:59 localhost systemd: Starting system-lvm2\x2dpvscan.slice.
+Mar 14 03:12:59 localhost systemd: Starting LVM2 PV scan on device 8:3...
+Mar 14 03:12:59 localhost systemd: Found device VBOX_HARDDISK 2.
+Mar 14 03:12:59 localhost kernel: input: PC Speaker as /devices/platform/pcspkr/input/input5
+Mar 14 03:12:59 localhost kernel: cryptd: max_cpu_qlen set to 100
+Mar 14 03:12:59 localhost lvm: 2 logical volume(s) in volume group "VolGroup00" monitored
+Mar 14 03:12:59 localhost systemd: Started Monitoring of LVM2 mirrors, snapshots etc. using dmeventd or progress polling.
+Mar 14 03:12:59 localhost systemd: Reached target Local File Systems (Pre).
+Mar 14 03:12:59 localhost systemd: Starting Local File Systems (Pre).
+Mar 14 03:12:59 localhost systemd: Mounting /boot...
+Mar 14 03:12:59 localhost kernel: ppdev: user-space parallel port driver
+Mar 14 03:12:59 localhost kernel: AVX2 version of gcm_enc/dec engaged.
+Mar 14 03:12:59 localhost kernel: AES CTR mode by8 optimization enabled
+Mar 14 03:12:59 localhost systemd: Found device /dev/mapper/VolGroup00-LogVol01.
+Mar 14 03:12:59 localhost systemd: Activating swap /dev/mapper/VolGroup00-LogVol01...
+Mar 14 03:12:59 localhost lvm: 2 logical volume(s) in volume group "VolGroup00" now active
+Mar 14 03:12:59 localhost systemd: Started LVM2 PV scan on device 8:3.
+Mar 14 03:12:59 localhost kernel: XFS (sda2): Mounting V5 Filesystem
+Mar 14 03:12:59 localhost kernel: Adding 1572860k swap on /dev/mapper/VolGroup00-LogVol01.  Priority:-1 extents:1 across:1572860k FS
+Mar 14 03:12:59 localhost systemd: Activated swap /dev/mapper/VolGroup00-LogVol01.
+Mar 14 03:12:59 localhost kernel: alg: No test for __gcm-aes-aesni (__driver-gcm-aes-aesni)
+Mar 14 03:12:59 localhost systemd: Reached target Swap.
+Mar 14 03:12:59 localhost kernel: alg: No test for __generic-gcm-aes-aesni (__driver-generic-gcm-aes-aesni)
+Mar 14 03:12:59 localhost systemd: Starting Swap.
+Mar 14 03:13:00 localhost systemd: Mounted /boot.
+Mar 14 03:13:00 localhost systemd: Reached target Local File Systems.
+Mar 14 03:13:00 localhost systemd: Starting Local File Systems.
+Mar 14 03:13:00 localhost systemd: Starting Rebuild Journal Catalog...
+Mar 14 03:13:00 localhost systemd: Starting Migrate local SELinux policy changes from the old store structure to the new structure...
+Mar 14 03:13:00 localhost systemd: Starting Preprocess NFS configuration...
+Mar 14 03:13:00 localhost kernel: XFS (sda2): Ending clean mount
+Mar 14 03:13:00 localhost systemd: Failed at step STDIN spawning /usr/libexec/selinux/selinux-policy-migrate-local-changes.sh: Inappropriate ioctl for device
+Mar 14 03:13:00 localhost systemd: Starting Commit a transient machine-id on disk...
+Mar 14 03:13:00 localhost systemd: Starting Tell Plymouth To Write Out Runtime Data...
+Mar 14 03:13:00 localhost systemd: Starting Create Volatile Files and Directories...
+Mar 14 03:13:00 localhost systemd: selinux-policy-migrate-local-changes@targeted.service: main process exited, code=exited, status=208/STDIN
+Mar 14 03:13:00 localhost systemd: Failed to start Migrate local SELinux policy changes from the old store structure to the new structure.
+Mar 14 03:13:00 localhost systemd: Unit selinux-policy-migrate-local-changes@targeted.service entered failed state.
+Mar 14 03:13:00 localhost systemd: selinux-policy-migrate-local-changes@targeted.service failed.
+Mar 14 03:13:00 localhost systemd: Started Commit a transient machine-id on disk.
+Mar 14 03:13:00 localhost systemd: Started Rebuild Journal Catalog.
+Mar 14 03:13:00 localhost systemd: Started Tell Plymouth To Write Out Runtime Data.
+Mar 14 03:13:00 localhost systemd: Starting Update is Completed...
+Mar 14 03:13:00 localhost systemd: Started Preprocess NFS configuration.
+Mar 14 03:13:00 localhost systemd: Started Update is Completed.
+Mar 14 03:13:00 localhost systemd: Started Create Volatile Files and Directories.
+Mar 14 03:13:00 localhost systemd: Mounting RPC Pipe File System...
+Mar 14 03:13:00 localhost systemd: Starting Security Auditing Service...
+Mar 14 03:13:00 localhost auditd[636]: Started dispatcher: /sbin/audispd pid: 638
+Mar 14 03:13:00 localhost kernel: type=1305 audit(1552533180.450:4): audit_pid=636 old=0 auid=4294967295 ses=4294967295 subj=system_u:system_r:auditd_t:s0 res=1
+Mar 14 03:13:00 localhost audispd: No plugins found, exiting
+Mar 14 03:13:00 localhost auditd[636]: dispatcher 638 reaped
+Mar 14 03:13:00 localhost kernel: RPC: Registered named UNIX socket transport module.
+Mar 14 03:13:00 localhost kernel: RPC: Registered udp transport module.
+Mar 14 03:13:00 localhost kernel: RPC: Registered tcp transport module.
+Mar 14 03:13:00 localhost kernel: RPC: Registered tcp NFSv4.1 backchannel transport module.
+Mar 14 03:13:00 localhost systemd: Mounted RPC Pipe File System.
+Mar 14 03:13:00 localhost systemd: Reached target rpc_pipefs.target.
+Mar 14 03:13:00 localhost systemd: Starting rpc_pipefs.target.
+Mar 14 03:13:00 localhost kernel: e1000 0000:00:03.0 eth0: (PCI:33MHz:32-bit) 52:54:00:c9:c7:04
+Mar 14 03:13:00 localhost kernel: e1000 0000:00:03.0 eth0: Intel(R) PRO/1000 Network Connection
+Mar 14 03:13:00 localhost kernel: piix4_smbus 0000:00:07.0: SMBus Host Controller at 0x4100, revision 0
+Mar 14 03:13:00 localhost auditd[636]: Init complete, auditd 2.8.1 listening for events (startup state enable)
+Mar 14 03:13:00 localhost systemd: Started Security Auditing Service.
+Mar 14 03:13:00 localhost systemd: Starting Update UTMP about System Boot/Shutdown...
+Mar 14 03:13:00 localhost systemd: Started Update UTMP about System Boot/Shutdown.
+Mar 14 03:13:00 localhost systemd: Reached target System Initialization.
+Mar 14 03:13:00 localhost systemd: Starting System Initialization.
+Mar 14 03:13:00 localhost systemd: Listening on D-Bus System Message Bus Socket.
+Mar 14 03:13:00 localhost systemd: Starting D-Bus System Message Bus Socket.
+Mar 14 03:13:00 localhost systemd: Listening on RPCbind Server Activation Socket.
+Mar 14 03:13:00 localhost systemd: Starting RPCbind Server Activation Socket.
+Mar 14 03:13:00 localhost systemd: Reached target Sockets.
+Mar 14 03:13:00 localhost systemd: Starting Sockets.
+Mar 14 03:13:00 localhost systemd: Starting RPC bind service...
+Mar 14 03:13:00 localhost systemd: Started Daily Cleanup of Temporary Directories.
+Mar 14 03:13:00 localhost systemd: Starting Daily Cleanup of Temporary Directories.
+Mar 14 03:13:00 localhost systemd: Reached target Timers.
+Mar 14 03:13:00 localhost systemd: Starting Timers.
+Mar 14 03:13:00 localhost systemd: Reached target Basic System.
+Mar 14 03:13:00 localhost systemd: Starting Basic System.
+Mar 14 03:13:00 localhost systemd: Starting Dump dmesg to /var/log/dmesg...
+Mar 14 03:13:00 localhost systemd: Started irqbalance daemon.
+Mar 14 03:13:00 localhost systemd: Starting irqbalance daemon...
+Mar 14 03:13:00 localhost systemd: Starting NTP client/server...
+Mar 14 03:13:00 localhost systemd: Starting OpenSSH Server Key Generation...
+Mar 14 03:13:00 localhost systemd: Started D-Bus System Message Bus.
+Mar 14 03:13:00 localhost /usr/sbin/irqbalance: Balancing is ineffective on systems with a single cpu.  Shutting down
+Mar 14 03:13:00 localhost chronyd[671]: chronyd version 3.2 starting (+CMDMON +NTP +REFCLOCK +RTC +PRIVDROP +SCFILTER +SECHASH +SIGND +ASYNCDNS +IPV6 +DEBUG)
+Mar 14 03:13:00 localhost systemd: Starting D-Bus System Message Bus...
+Mar 14 03:13:00 localhost systemd: Starting Network Manager...
+Mar 14 03:13:00 localhost systemd: Starting Login Service...
+Mar 14 03:13:00 localhost systemd: Starting GSSAPI Proxy Daemon...
+Mar 14 03:13:00 localhost systemd: Starting Authorization Manager...
+Mar 14 03:13:00 localhost systemd: Started RPC bind service.
+Mar 14 03:13:00 localhost systemd: Started Dump dmesg to /var/log/dmesg.
+Mar 14 03:13:00 localhost systemd-logind: Watching system buttons on /dev/input/event0 (Power Button)
+Mar 14 03:13:00 localhost systemd-logind: Watching system buttons on /dev/input/event1 (Sleep Button)
+Mar 14 03:13:00 localhost systemd-logind: Watching system buttons on /dev/input/event4 (Video Bus)
+Mar 14 03:13:00 localhost systemd-logind: New seat seat0.
+Mar 14 03:13:00 localhost systemd: Started Login Service.
+Mar 14 03:13:01 localhost polkitd[684]: Started polkitd version 0.112
+Mar 14 03:13:01 localhost systemd: Started GSSAPI Proxy Daemon.
+Mar 14 03:13:01 localhost systemd: Started NTP client/server.
+Mar 14 03:13:01 localhost systemd: Reached target NFS client services.
+Mar 14 03:13:01 localhost systemd: Starting NFS client services.
+Mar 14 03:13:01 localhost systemd: Reached target Remote File Systems (Pre).
+Mar 14 03:13:01 localhost systemd: Starting Remote File Systems (Pre).
+Mar 14 03:13:01 localhost systemd: Reached target Remote File Systems.
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.0705] NetworkManager (version 1.10.2-13.el7) is starting... (for the first time)
+Mar 14 03:13:01 localhost systemd: Starting Remote File Systems.
+Mar 14 03:13:01 localhost systemd: Starting Permit User Sessions...
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.0813] Read config: /etc/NetworkManager/NetworkManager.conf (lib: 10-slaves-order.conf)
+Mar 14 03:13:01 localhost systemd: Started Permit User Sessions.
+Mar 14 03:13:01 localhost systemd: Starting Terminate Plymouth Boot Screen...
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.1530] manager[0x559fc1d1f080]: monitoring kernel firmware directory '/lib/firmware'.
+Mar 14 03:13:01 localhost dbus[666]: [system] Activating via systemd: service name='org.freedesktop.hostname1' unit='dbus-org.freedesktop.hostname1.service'
+Mar 14 03:13:01 localhost systemd: Started Command Scheduler.
+Mar 14 03:13:01 localhost systemd: Starting Command Scheduler...
+Mar 14 03:13:01 localhost systemd: Starting Wait for Plymouth Boot Screen to Quit...
+Mar 14 03:13:01 localhost systemd: Started Authorization Manager.
+Mar 14 03:13:01 localhost systemd: Received SIGRTMIN+21 from PID 222 (plymouthd).
+Mar 14 03:13:01 localhost systemd: Started Terminate Plymouth Boot Screen.
+Mar 14 03:13:01 localhost systemd: Started Wait for Plymouth Boot Screen to Quit.
+Mar 14 03:13:01 localhost systemd: Started Getty on tty1.
+Mar 14 03:13:01 localhost systemd: Starting Getty on tty1...
+Mar 14 03:13:01 localhost systemd: Reached target Login Prompts.
+Mar 14 03:13:01 localhost systemd: Starting Login Prompts.
+Mar 14 03:13:01 localhost systemd: Starting Hostname Service...
+Mar 14 03:13:01 localhost dbus[666]: [system] Successfully activated service 'org.freedesktop.hostname1'
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.4024] hostname: hostname: using hostnamed
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.4026] hostname: hostname changed from (none) to "localhost.localdomain"
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.4036] dns-mgr[0x559fc1d36150]: init: dns=default, rc-manager=file
+Mar 14 03:13:01 localhost dbus[666]: [system] Activating via systemd: service name='org.freedesktop.nm_dispatcher' unit='dbus-org.freedesktop.nm-dispatcher.service'
+Mar 14 03:13:01 localhost systemd: Started Hostname Service.
+Mar 14 03:13:01 localhost systemd: Started Network Manager.
+Mar 14 03:13:01 localhost systemd: Starting Network Manager Script Dispatcher Service...
+Mar 14 03:13:01 localhost systemd: Starting Network Manager Wait Online...
+Mar 14 03:13:01 localhost dbus[666]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.5557] settings: loaded plugin ifcfg-rh: (c) 2007 - 2015 Red Hat, Inc.  To report bugs please use the NetworkManager mailing list. (/usr/lib64/NetworkManager/libnm-settings-plugin-ifcfg-rh.so)
+Mar 14 03:13:01 localhost systemd: Started Network Manager Script Dispatcher Service.
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.5593] settings: loaded plugin iBFT: (c) 2014 Red Hat, Inc.  To report bugs please use the NetworkManager mailing list. (/usr/lib64/NetworkManager/libnm-settings-plugin-ibft.so)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.5593] settings: loaded plugin keyfile: (c) 2007 - 2016 Red Hat, Inc.  To report bugs please use the NetworkManager mailing list.
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.5621] ifcfg-rh: new connection /etc/sysconfig/network-scripts/ifcfg-eth0 (5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03,"System eth0")
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6014] manager: rfkill: WiFi enabled by radio killswitch; enabled by state file
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6021] manager: rfkill: WWAN enabled by radio killswitch; enabled by state file
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6024] manager: Networking is enabled by state file
+Mar 14 03:13:01 localhost nm-dispatcher: req:1 'hostname': new request (3 scripts)
+Mar 14 03:13:01 localhost nm-dispatcher: req:1 'hostname': start running ordered scripts...
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6050] dhcp-init: Using DHCP client 'dhclient'
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6056] Loaded device plugin: NMBondDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6056] Loaded device plugin: NMBridgeDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6057] Loaded device plugin: NMDummyDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6057] Loaded device plugin: NMEthernetDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6057] Loaded device plugin: NMInfinibandDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6057] Loaded device plugin: NMIPTunnelDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6057] Loaded device plugin: NMMacsecDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6057] Loaded device plugin: NMMacvlanDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6058] Loaded device plugin: NMPppDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6058] Loaded device plugin: NMTunDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6058] Loaded device plugin: NMVethDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6058] Loaded device plugin: NMVlanDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6058] Loaded device plugin: NMVxlanDeviceFactory (internal)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6229] Loaded device plugin: NMTeamFactory (/usr/lib64/NetworkManager/libnm-device-plugin-team.so)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6296] device (lo): carrier: link connected
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6323] manager: (lo): new Generic device (/org/freedesktop/NetworkManager/Devices/1)
+Mar 14 03:13:01 localhost NetworkManager[681]: <info>  [1552533181.6393] manager: (eth0): new Ethernet device (/org/freedesktop/NetworkManager/Devices/2)
+Mar 14 03:13:02 localhost sshd-keygen: Generating SSH2 RSA host key: [  OK  ]
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: intel8x0_measure_ac97_clock: measured 52037 usecs (11264 samples)
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: measured clock 216461 rejected
+Mar 14 03:13:02 localhost sshd-keygen: Generating SSH2 ECDSA host key: [  OK  ]
+Mar 14 03:13:02 localhost sshd-keygen: Generating SSH2 ED25519 host key: [  OK  ]
+Mar 14 03:13:02 localhost systemd: Started OpenSSH Server Key Generation.
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: intel8x0_measure_ac97_clock: measured 51540 usecs (11264 samples)
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: measured clock 218548 rejected
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: intel8x0_measure_ac97_clock: measured 50702 usecs (12288 samples)
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: measured clock 242357 rejected
+Mar 14 03:13:02 localhost kernel: snd_intel8x0 0000:00:05.0: clocking to 48000
+Mar 14 03:13:02 localhost systemd: Reached target Sound Card.
+Mar 14 03:13:02 localhost systemd: Starting Sound Card.
+Mar 14 03:13:03 localhost kernel: e1000 0000:00:08.0 eth1: (PCI:33MHz:32-bit) 08:00:27:b8:94:05
+Mar 14 03:13:03 localhost kernel: e1000 0000:00:08.0 eth1: Intel(R) PRO/1000 Network Connection
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.1630] manager: (eth1): new Ethernet device (/org/freedesktop/NetworkManager/Devices/3)
+Mar 14 03:13:03 localhost kernel: IPv6: ADDRCONF(NETDEV_UP): eth1: link is not ready
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.1817] device (eth1): state change: unmanaged -> unavailable (reason 'managed', sys-iface-state: 'external')
+Mar 14 03:13:03 localhost kernel: IPv6: ADDRCONF(NETDEV_UP): eth1: link is not ready
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.1918] ifcfg-rh: add connection in-memory (c38b3655-b4d6-30e1-ae1f-67f739d8f4f1,"Wired connection 1")
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.1940] settings: (eth1): created default wired connection 'Wired connection 1'
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.1996] device (eth0): state change: unmanaged -> unavailable (reason 'managed', sys-iface-state: 'external')
+Mar 14 03:13:03 localhost kernel: IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+Mar 14 03:13:03 localhost kernel: IPv6: ADDRCONF(NETDEV_UP): eth0: link is not ready
+Mar 14 03:13:03 localhost kernel: e1000: eth0 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+Mar 14 03:13:03 localhost kernel: IPv6: ADDRCONF(NETDEV_CHANGE): eth0: link becomes ready
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2078] device (eth0): carrier: link connected
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2103] device (eth0): state change: unavailable -> disconnected (reason 'carrier-changed', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2136] policy: auto-activating connection 'System eth0'
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2160] device (eth0): Activation: starting connection 'System eth0' (5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03)
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2171] device (eth0): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2181] manager: NetworkManager state is now CONNECTING
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2204] device (eth0): state change: prepare -> config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2225] device (eth0): state change: config -> ip-config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2253] dhcp4 (eth0): activation: beginning transaction (timeout in 45 seconds)
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2302] dhcp4 (eth0): dhclient started with pid 762
+Mar 14 03:13:03 localhost dhclient[762]: DHCPDISCOVER on eth0 to 255.255.255.255 port 67 interval 5 (xid=0x3b443be8)
+Mar 14 03:13:03 localhost dhclient[762]: DHCPREQUEST on eth0 to 255.255.255.255 port 67 (xid=0x3b443be8)
+Mar 14 03:13:03 localhost dhclient[762]: DHCPOFFER from 10.0.2.2
+Mar 14 03:13:03 localhost dhclient[762]: DHCPACK from 10.0.2.2 (xid=0x3b443be8)
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2821] dhcp4 (eth0):   address 10.0.2.15
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2821] dhcp4 (eth0):   plen 24 (255.255.255.0)
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2821] dhcp4 (eth0):   gateway 10.0.2.2
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2822] dhcp4 (eth0):   lease time 86400
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2822] dhcp4 (eth0):   nameserver '10.0.2.3'
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2822] dhcp4 (eth0): state changed unknown -> bound
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2874] device (eth0): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2954] device (eth0): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2972] device (eth0): state change: secondaries -> activated (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.2985] manager: NetworkManager state is now CONNECTED_LOCAL
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.3000] manager: NetworkManager state is now CONNECTED_SITE
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.3009] policy: set 'System eth0' (eth0) as default for IPv4 routing and DNS
+Mar 14 03:13:03 localhost dhclient[762]: bound to 10.0.2.15 -- renewal in 36864 seconds.
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.3077] device (eth0): Activation: successful, device activated.
+Mar 14 03:13:03 localhost nm-dispatcher: req:2 'up' [eth0]: new request (3 scripts)
+Mar 14 03:13:03 localhost nm-dispatcher: req:2 'up' [eth0]: start running ordered scripts...
+Mar 14 03:13:03 localhost NetworkManager[681]: <info>  [1552533183.3141] manager: NetworkManager state is now CONNECTED_GLOBAL
+Mar 14 03:13:03 localhost nm-dispatcher: req:3 'connectivity-change': new request (3 scripts)
+Mar 14 03:13:03 localhost nm-dispatcher: req:3 'connectivity-change': start running ordered scripts...
+Mar 14 03:13:05 localhost kernel: e1000: eth1 NIC Link is Up 1000 Mbps Full Duplex, Flow Control: RX
+Mar 14 03:13:05 localhost kernel: IPv6: ADDRCONF(NETDEV_CHANGE): eth1: link becomes ready
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2100] device (eth1): carrier: link connected
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2216] device (eth1): state change: unavailable -> disconnected (reason 'carrier-changed', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2326] policy: auto-activating connection 'Wired connection 1'
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2359] device (eth1): Activation: starting connection 'Wired connection 1' (c38b3655-b4d6-30e1-ae1f-67f739d8f4f1)
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2376] device (eth1): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2407] device (eth1): state change: prepare -> config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2434] device (eth1): state change: config -> ip-config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2449] dhcp4 (eth1): activation: beginning transaction (timeout in 45 seconds)
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2474] dhcp4 (eth1): dhclient started with pid 810
+Mar 14 03:13:05 localhost dhclient[810]: DHCPDISCOVER on eth1 to 255.255.255.255 port 67 interval 6 (xid=0x66c84b51)
+Mar 14 03:13:05 localhost dhclient[810]: DHCPREQUEST on eth1 to 255.255.255.255 port 67 (xid=0x66c84b51)
+Mar 14 03:13:05 localhost dhclient[810]: DHCPOFFER from 192.168.56.100
+Mar 14 03:13:05 localhost dhclient[810]: DHCPACK from 192.168.56.100 (xid=0x66c84b51)
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2779] dhcp4 (eth1):   address 192.168.56.101
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2779] dhcp4 (eth1):   plen 24 (255.255.255.0)
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2780] dhcp4 (eth1):   lease time 1200
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2780] dhcp4 (eth1): state changed unknown -> bound
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2787] device (eth1): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2853] device (eth1): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2873] device (eth1): state change: secondaries -> activated (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2911] device (eth1): Activation: successful, device activated.
+Mar 14 03:13:05 localhost nm-dispatcher: req:4 'up' [eth1]: new request (3 scripts)
+Mar 14 03:13:05 localhost nm-dispatcher: req:4 'up' [eth1]: start running ordered scripts...
+Mar 14 03:13:05 localhost NetworkManager[681]: <info>  [1552533185.2945] manager: startup complete
+Mar 14 03:13:05 localhost dhclient[810]: bound to 192.168.56.101 -- renewal in 547 seconds.
+Mar 14 03:13:05 localhost systemd: Started Network Manager Wait Online.
+Mar 14 03:13:05 localhost systemd: Starting LSB: Bring up/down networking...
+Mar 14 03:13:05 localhost network: Bringing up loopback interface:  [  OK  ]
+Mar 14 03:13:05 localhost network: Bringing up interface eth0:  [  OK  ]
+Mar 14 03:13:05 localhost systemd: Started LSB: Bring up/down networking.
+Mar 14 03:13:05 localhost systemd: Reached target Network.
+Mar 14 03:13:05 localhost systemd: Starting Network.
+Mar 14 03:13:05 localhost systemd: Starting OpenSSH server daemon...
+Mar 14 03:13:05 localhost systemd: Starting Postfix Mail Transport Agent...
+Mar 14 03:13:05 localhost systemd: Starting Dynamic System Tuning Daemon...
+Mar 14 03:13:05 localhost systemd: Reached target Network is Online.
+Mar 14 03:13:05 localhost systemd: Starting Network is Online.
+Mar 14 03:13:05 localhost systemd: Starting System Logging Service...
+Mar 14 03:13:05 localhost systemd: Starting Notify NFS peers of a restart...
+Mar 14 03:13:05 localhost sm-notify[990]: Version 1.3.0 starting
+Mar 14 03:13:05 localhost systemd: Started Notify NFS peers of a restart.
+Mar 14 03:13:05 localhost rsyslogd: [origin software="rsyslogd" swVersion="8.24.0" x-pid="989" x-info="http://www.rsyslog.com"] start
+Mar 14 03:13:05 localhost systemd: Started System Logging Service.
+Mar 14 03:13:05 localhost systemd: Started OpenSSH server daemon.
+Mar 14 03:13:07 localhost systemd: Started Postfix Mail Transport Agent.
+Mar 14 03:13:07 localhost systemd: Started Dynamic System Tuning Daemon.
+Mar 14 03:13:07 localhost systemd: Reached target Multi-User System.
+Mar 14 03:13:07 localhost systemd: Starting Multi-User System.
+Mar 14 03:13:07 localhost systemd: Starting Update UTMP about System Runlevel Changes...
+Mar 14 03:13:07 localhost systemd: Started Update UTMP about System Runlevel Changes.
+Mar 14 03:13:07 localhost systemd: Startup finished in 463ms (kernel) + 10.653s (initrd) + 9.005s (userspace) = 20.122s.
+Mar 14 03:13:09 localhost chronyd[671]: Selected source 212.13.97.55
+Mar 14 03:13:10 localhost systemd: Created slice User Slice of vagrant.
+Mar 14 03:13:10 localhost systemd: Starting User Slice of vagrant.
+Mar 14 03:13:10 localhost systemd: Started Session 1 of user vagrant.
+Mar 14 03:13:10 localhost systemd-logind: New session 1 of user vagrant.
+Mar 14 03:13:10 localhost systemd: Starting Session 1 of user vagrant.
+Mar 14 03:13:11 localhost chronyd[671]: Source 211.233.84.186 replaced with 178.62.16.103
+Mar 14 03:13:18 localhost systemd-logind: Removed session 1.
+Mar 14 03:13:18 localhost systemd: Removed slice User Slice of vagrant.
+Mar 14 03:13:18 localhost systemd: Stopping User Slice of vagrant.
+Mar 14 03:13:18 localhost systemd: Created slice User Slice of vagrant.
+Mar 14 03:13:18 localhost systemd: Starting User Slice of vagrant.
+Mar 14 03:13:18 localhost systemd: Started Session 2 of user vagrant.
+Mar 14 03:13:18 localhost systemd-logind: New session 2 of user vagrant.
+Mar 14 03:13:18 localhost systemd: Starting Session 2 of user vagrant.
+Mar 14 03:13:20 localhost systemd-hostnamed: Changed static host name to 'lvm'
+Mar 14 03:13:20 localhost NetworkManager[681]: <info>  [1552533200.8362] hostname: hostname changed from "localhost.localdomain" to "lvm"
+Mar 14 03:13:20 localhost NetworkManager[681]: <info>  [1552533200.8366] policy: set-hostname: set hostname to 'lvm' (from system configuration)
+Mar 14 03:13:20 localhost dbus[666]: [system] Activating via systemd: service name='org.freedesktop.nm_dispatcher' unit='dbus-org.freedesktop.nm-dispatcher.service'
+Mar 14 03:13:20 localhost systemd: Starting Network Manager Script Dispatcher Service...
+Mar 14 03:13:20 localhost systemd-hostnamed: Changed host name to 'lvm'
+Mar 14 03:13:20 localhost dbus[666]: [system] Successfully activated service 'org.freedesktop.nm_dispatcher'
+Mar 14 03:13:20 localhost systemd: Started Network Manager Script Dispatcher Service.
+Mar 14 03:13:20 localhost nm-dispatcher: req:1 'hostname': new request (3 scripts)
+Mar 14 03:13:20 localhost nm-dispatcher: req:1 'hostname': start running ordered scripts...
+Mar 14 03:13:20 localhost nm-dispatcher: req:2 'hostname': new request (3 scripts)
+Mar 14 03:13:20 localhost nm-dispatcher: req:2 'hostname': start running ordered scripts...
+Mar 14 03:13:20 localhost systemd: Stopping LSB: Bring up/down networking...
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.1919] device (eth0): state change: activated -> deactivating (reason 'user-requested', sys-iface-state: 'managed')
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.1952] manager: NetworkManager state is now CONNECTED_LOCAL
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.1955] audit: op="device-disconnect" interface="eth0" ifindex=2 pid=2361 uid=0 result="success"
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.1958] device (eth0): state change: deactivating -> disconnected (reason 'user-requested', sys-iface-state: 'managed')
+Mar 14 03:13:21 localhost nm-dispatcher: req:3 'connectivity-change': new request (3 scripts)
+Mar 14 03:13:21 localhost nm-dispatcher: req:3 'connectivity-change': start running ordered scripts...
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.2052] dhcp4 (eth0): canceled DHCP transaction, DHCP client pid 762
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.2052] dhcp4 (eth0): state changed bound -> done
+Mar 14 03:13:21 localhost network: Shutting down interface eth0:  Device 'eth0' successfully disconnected.
+Mar 14 03:13:21 localhost nm-dispatcher: req:4 'down' [eth0]: new request (3 scripts)
+Mar 14 03:13:21 localhost network: [  OK  ]
+Mar 14 03:13:21 localhost chronyd[671]: Source 178.62.16.103 offline
+Mar 14 03:13:21 localhost chronyd[671]: Source 194.190.168.1 offline
+Mar 14 03:13:21 localhost chronyd[671]: Source 195.122.241.236 offline
+Mar 14 03:13:21 localhost chronyd[671]: Source 212.13.97.55 offline
+Mar 14 03:13:21 localhost chronyd[671]: Can't synchronise: no selectable sources
+Mar 14 03:13:21 localhost nm-dispatcher: req:4 'down' [eth0]: start running ordered scripts...
+Mar 14 03:13:21 localhost network: Shutting down loopback interface:  [  OK  ]
+Mar 14 03:13:21 localhost systemd: Starting LSB: Bring up/down networking...
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.7732] device (lo): carrier: link connected
+Mar 14 03:13:21 localhost network: Bringing up loopback interface:  [  OK  ]
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9733] device (eth0): Activation: starting connection 'System eth0' (5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03)
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9734] audit: op="connection-activate" uuid="5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03" name="System eth0" pid=2631 uid=0 result="success"
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9735] device (eth0): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9737] manager: NetworkManager state is now CONNECTING
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9740] device (eth0): state change: prepare -> config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9752] device (eth0): state change: config -> ip-config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:21 localhost NetworkManager[681]: <info>  [1552533201.9759] dhcp4 (eth0): activation: beginning transaction (timeout in 45 seconds)
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533201.9989] dhcp4 (eth0): dhclient started with pid 2635
+Mar 14 03:13:22 localhost dhclient[2635]: DHCPREQUEST on eth0 to 255.255.255.255 port 67 (xid=0x11978a50)
+Mar 14 03:13:22 localhost dhclient[2635]: DHCPACK from 10.0.2.2 (xid=0x11978a50)
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0200] dhcp4 (eth0):   address 10.0.2.15
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0201] dhcp4 (eth0):   plen 24 (255.255.255.0)
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0201] dhcp4 (eth0):   gateway 10.0.2.2
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0201] dhcp4 (eth0):   lease time 86400
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0201] dhcp4 (eth0):   nameserver '10.0.2.3'
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0201] dhcp4 (eth0): state changed unknown -> bound
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0211] device (eth0): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0217] device (eth0): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0218] device (eth0): state change: secondaries -> activated (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0219] manager: NetworkManager state is now CONNECTED_LOCAL
+Mar 14 03:13:22 localhost network: Bringing up interface eth0:  Connection successfully activated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/3)
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0312] manager: NetworkManager state is now CONNECTED_SITE
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0313] policy: set 'System eth0' (eth0) as default for IPv4 routing and DNS
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0337] device (eth0): Activation: successful, device activated.
+Mar 14 03:13:22 localhost NetworkManager[681]: <info>  [1552533202.0346] manager: NetworkManager state is now CONNECTED_GLOBAL
+Mar 14 03:13:22 localhost nm-dispatcher: req:5 'up' [eth0]: new request (3 scripts)
+Mar 14 03:13:22 localhost network: [  OK  ]
+Mar 14 03:13:22 localhost nm-dispatcher: req:5 'up' [eth0]: start running ordered scripts...
+Mar 14 03:13:22 localhost dhclient[2635]: bound to 10.0.2.15 -- renewal in 39475 seconds.
+Mar 14 03:13:22 localhost nm-dispatcher: req:6 'connectivity-change': new request (3 scripts)
+Mar 14 03:13:22 localhost chronyd[671]: Source 212.13.97.55 online
+Mar 14 03:13:22 localhost chronyd[671]: Source 194.190.168.1 online
+Mar 14 03:13:22 localhost chronyd[671]: Source 178.62.16.103 online
+Mar 14 03:13:22 localhost chronyd[671]: Source 195.122.241.236 online
+Mar 14 03:13:22 localhost nm-dispatcher: req:6 'connectivity-change': start running ordered scripts...
+Mar 14 03:13:22 localhost systemd: Started LSB: Bring up/down networking.
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.5733] device (eth1): state change: activated -> deactivating (reason 'user-requested', sys-iface-state: 'managed')
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.5817] audit: op="device-disconnect" interface="eth1" ifindex=3 pid=3093 uid=0 result="success"
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.5820] device (eth1): state change: deactivating -> disconnected (reason 'user-requested', sys-iface-state: 'managed')
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.5878] dhcp4 (eth1): canceled DHCP transaction, DHCP client pid 810
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.5878] dhcp4 (eth1): state changed bound -> done
+Mar 14 03:13:25 localhost nm-dispatcher: req:7 'down' [eth1]: new request (3 scripts)
+Mar 14 03:13:25 localhost nm-dispatcher: req:7 'down' [eth1]: start running ordered scripts...
+Mar 14 03:13:25 localhost systemd: Stopping Network Manager Wait Online...
+Mar 14 03:13:25 localhost systemd: Stopping Network Manager...
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.6994] caught SIGTERM, shutting down normally.
+Mar 14 03:13:25 localhost NetworkManager[681]: <info>  [1552533205.7080] exiting (success)
+Mar 14 03:13:25 localhost systemd: Starting Network Manager...
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.7513] NetworkManager (version 1.10.2-13.el7) is starting... (after a restart)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.7515] Read config: /etc/NetworkManager/NetworkManager.conf (lib: 10-slaves-order.conf)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.7953] manager[0x55c098198070]: monitoring kernel firmware directory '/lib/firmware'.
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.7987] hostname: hostname: using hostnamed
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.7987] hostname: hostname changed from (none) to "lvm"
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.7992] dns-mgr[0x55c0981b5940]: init: dns=default, rc-manager=file
+Mar 14 03:13:25 localhost systemd: Started Network Manager.
+Mar 14 03:13:25 localhost systemd: Starting Network Manager Wait Online...
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8141] settings: loaded plugin ifcfg-rh: (c) 2007 - 2015 Red Hat, Inc.  To report bugs please use the NetworkManager mailing list. (/usr/lib64/NetworkManager/libnm-settings-plugin-ifcfg-rh.so)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8143] settings: loaded plugin iBFT: (c) 2014 Red Hat, Inc.  To report bugs please use the NetworkManager mailing list. (/usr/lib64/NetworkManager/libnm-settings-plugin-ibft.so)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8143] settings: loaded plugin keyfile: (c) 2007 - 2016 Red Hat, Inc.  To report bugs please use the NetworkManager mailing list.
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8163] ifcfg-rh: new connection /etc/sysconfig/network-scripts/ifcfg-eth1 (9c92fad9-6ecb-3e6c-eb4d-8a47c6f50c04,"System eth1")
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8171] ifcfg-rh: new connection /etc/sysconfig/network-scripts/ifcfg-eth0 (5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03,"System eth0")
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8451] manager: rfkill: WiFi enabled by radio killswitch; enabled by state file
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8451] manager: rfkill: WWAN enabled by radio killswitch; enabled by state file
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8452] manager: Networking is enabled by state file
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8455] dhcp-init: Using DHCP client 'dhclient'
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8455] Loaded device plugin: NMBondDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8456] Loaded device plugin: NMBridgeDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8456] Loaded device plugin: NMDummyDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8456] Loaded device plugin: NMEthernetDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8456] Loaded device plugin: NMInfinibandDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8456] Loaded device plugin: NMIPTunnelDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8456] Loaded device plugin: NMMacsecDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8457] Loaded device plugin: NMMacvlanDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8457] Loaded device plugin: NMPppDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8457] Loaded device plugin: NMTunDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8457] Loaded device plugin: NMVethDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8457] Loaded device plugin: NMVlanDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8457] Loaded device plugin: NMVxlanDeviceFactory (internal)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8472] Loaded device plugin: NMTeamFactory (/usr/lib64/NetworkManager/libnm-device-plugin-team.so)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8494] device (lo): carrier: link connected
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8502] manager: (lo): new Generic device (/org/freedesktop/NetworkManager/Devices/1)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8508] device (eth0): carrier: link connected
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8519] manager: (eth0): new Ethernet device (/org/freedesktop/NetworkManager/Devices/2)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8549] manager: (eth0): assume: will attempt to assume matching connection 'System eth0' (5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03) (indicated)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8551] device (eth0): state change: unmanaged -> unavailable (reason 'connection-assumed', sys-iface-state: 'assume')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8556] device (eth0): state change: unavailable -> disconnected (reason 'connection-assumed', sys-iface-state: 'assume')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8573] device (eth0): Activation: starting connection 'System eth0' (5fb06bd0-0bb0-7ffb-45f1-d6edd65f3e03)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8578] device (eth1): carrier: link connected
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8591] manager: (eth1): new Ethernet device (/org/freedesktop/NetworkManager/Devices/3)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8603] device (eth1): state change: unmanaged -> unavailable (reason 'managed', sys-iface-state: 'external')
+Mar 14 03:13:25 localhost nm-dispatcher: req:8 'hostname': new request (3 scripts)
+Mar 14 03:13:25 localhost nm-dispatcher: req:8 'hostname': start running ordered scripts...
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8867] device (eth0): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'assume')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8884] device (eth0): state change: prepare -> config (reason 'none', sys-iface-state: 'assume')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8886] device (eth1): state change: unavailable -> disconnected (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8911] policy: auto-activating connection 'System eth1'
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8927] device (eth1): Activation: starting connection 'System eth1' (9c92fad9-6ecb-3e6c-eb4d-8a47c6f50c04)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8929] device (eth1): state change: disconnected -> prepare (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8931] manager: NetworkManager state is now CONNECTING
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.8935] device (eth1): state change: prepare -> config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.9114] device (eth0): state change: config -> ip-config (reason 'none', sys-iface-state: 'assume')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.9129] dhcp4 (eth0): activation: beginning transaction (timeout in 45 seconds)
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.9526] dhcp4 (eth0): dhclient started with pid 3140
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.9536] device (eth1): state change: config -> ip-config (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:25 localhost NetworkManager[3118]: <info>  [1552533205.9866] device (eth1): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533205.9990] device (eth1): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533205.9994] device (eth1): state change: secondaries -> activated (reason 'none', sys-iface-state: 'managed')
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533205.9995] manager: NetworkManager state is now CONNECTED_LOCAL
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0118] policy: set 'System eth0' (eth0) as default for IPv4 routing and DNS
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0159] device (eth1): Activation: successful, device activated.
+Mar 14 03:13:26 localhost nm-dispatcher: req:9 'up' [eth1]: new request (3 scripts)
+Mar 14 03:13:26 localhost dhclient[3140]: DHCPREQUEST on eth0 to 255.255.255.255 port 67 (xid=0x644e3e)
+Mar 14 03:13:26 localhost dhclient[3140]: DHCPACK from 10.0.2.2 (xid=0x644e3e)
+Mar 14 03:13:26 localhost nm-dispatcher: req:9 'up' [eth1]: start running ordered scripts...
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0639] dhcp4 (eth0):   address 10.0.2.15
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0639] dhcp4 (eth0):   plen 24 (255.255.255.0)
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0639] dhcp4 (eth0):   gateway 10.0.2.2
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0639] dhcp4 (eth0):   lease time 86400
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0639] dhcp4 (eth0):   nameserver '10.0.2.3'
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0640] dhcp4 (eth0): state changed unknown -> bound
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0646] device (eth0): state change: ip-config -> ip-check (reason 'none', sys-iface-state: 'assume')
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0650] device (eth0): state change: ip-check -> secondaries (reason 'none', sys-iface-state: 'assume')
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0652] device (eth0): state change: secondaries -> activated (reason 'none', sys-iface-state: 'assume')
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0653] manager: NetworkManager state is now CONNECTED_SITE
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0743] device (eth0): Activation: successful, device activated.
+Mar 14 03:13:26 localhost systemd: Started Network Manager Wait Online.
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0749] manager: startup complete
+Mar 14 03:13:26 localhost NetworkManager[3118]: <info>  [1552533206.0751] manager: NetworkManager state is now CONNECTED_GLOBAL
+Mar 14 03:13:26 localhost nm-dispatcher: req:10 'up' [eth0]: new request (3 scripts)
+Mar 14 03:13:26 localhost nm-dispatcher: req:11 'connectivity-change': new request (3 scripts)
+Mar 14 03:13:26 localhost dhclient[3140]: bound to 10.0.2.15 -- renewal in 40160 seconds.
+Mar 14 03:13:26 localhost nm-dispatcher: req:10 'up' [eth0]: start running ordered scripts...
+Mar 14 03:13:26 localhost nm-dispatcher: req:11 'connectivity-change': start running ordered scripts...
+Mar 14 03:13:30 localhost systemd: Started Session 3 of user vagrant.
+Mar 14 03:13:30 localhost systemd-logind: New session 3 of user vagrant.
+Mar 14 03:13:30 localhost systemd: Starting Session 3 of user vagrant.
+Mar 14 03:13:46 localhost yum[3775]: Installed: mailx-12.5-19.el7.x86_64
+Mar 14 03:13:46 localhost yum[3775]: Installed: libreport-filesystem-2.1.11-42.el7.centos.x86_64
+Mar 14 03:13:46 localhost systemd: Reloading.
+Mar 14 03:13:47 localhost yum[3775]: Installed: mdadm-4.1-rc1_2.el7.x86_64
+Mar 14 03:13:47 localhost systemd: Reloading.
+Mar 14 03:13:47 localhost yum[3775]: Installed: 1:smartmontools-6.5-1.el7.x86_64
+Mar 14 03:13:47 localhost yum[3775]: Installed: hdparm-9.43-5.el7.x86_64
+Mar 14 03:13:47 localhost yum[3775]: Installed: gdisk-0.8.10-2.el7.x86_64
+Mar 14 03:13:47 localhost yum[3775]: Installed: nano-2.3.1-10.el7.x86_64
+Mar 14 03:13:48 localhost systemd-logind: Removed session 2.
+Mar 14 03:14:16 localhost chronyd[671]: Selected source 194.190.168.1
+Mar 14 03:16:59 localhost systemd: Started Session 4 of user vagrant.
+Mar 14 03:16:59 localhost systemd-logind: New session 4 of user vagrant.
+Mar 14 03:16:59 localhost systemd: Starting Session 4 of user vagrant.
+Mar 14 03:16:59 localhost systemd-logind: Removed session 4.
+Mar 14 03:17:12 localhost systemd: Started Session 5 of user vagrant.
+Mar 14 03:17:12 localhost systemd-logind: New session 5 of user vagrant.
+Mar 14 03:17:12 localhost systemd: Starting Session 5 of user vagrant.
+Mar 14 03:17:12 localhost systemd-logind: Removed session 5.
+Mar 14 03:17:28 localhost systemd: Started Session 6 of user vagrant.
+Mar 14 03:17:28 localhost systemd-logind: New session 6 of user vagrant.
+Mar 14 03:17:28 localhost systemd: Starting Session 6 of user vagrant.
+Mar 14 03:17:28 localhost systemd-logind: Removed session 6.
+Mar 14 03:17:49 localhost systemd: Started Session 7 of user vagrant.
+Mar 14 03:17:49 localhost systemd-logind: New session 7 of user vagrant.
+Mar 14 03:17:49 localhost systemd: Starting Session 7 of user vagrant.
+Mar 14 03:17:49 localhost systemd-logind: Removed session 7.
+Mar 14 03:18:12 localhost systemd: Started Session 8 of user vagrant.
+Mar 14 03:18:12 localhost systemd-logind: New session 8 of user vagrant.
+Mar 14 03:18:12 localhost systemd: Starting Session 8 of user vagrant.
+Mar 14 03:18:12 localhost systemd-logind: Removed session 8.
+Mar 14 03:18:21 localhost systemd: Started Session 9 of user vagrant.
+Mar 14 03:18:21 localhost systemd-logind: New session 9 of user vagrant.
+Mar 14 03:18:21 localhost systemd: Starting Session 9 of user vagrant.
+Mar 14 03:18:21 localhost systemd-logind: Removed session 9.
+Mar 14 03:18:33 localhost systemd: Started Session 10 of user vagrant.
+Mar 14 03:18:33 localhost systemd-logind: New session 10 of user vagrant.
+Mar 14 03:18:33 localhost systemd: Starting Session 10 of user vagrant.
+Mar 14 03:18:33 localhost systemd-logind: Removed session 10.
+Mar 14 03:18:52 localhost systemd: Started Session 11 of user vagrant.
+Mar 14 03:18:52 localhost systemd-logind: New session 11 of user vagrant.
+Mar 14 03:18:52 localhost systemd: Starting Session 11 of user vagrant.
+Mar 14 03:19:28 localhost systemd-logind: Removed session 11.
+Mar 14 03:19:39 localhost systemd: Started Session 12 of user vagrant.
+Mar 14 03:19:39 localhost systemd-logind: New session 12 of user vagrant.
+Mar 14 03:19:39 localhost systemd: Starting Session 12 of user vagrant.
+Mar 14 03:19:39 localhost systemd-logind: Removed session 12.
+Mar 14 03:19:46 localhost systemd: Started Session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd-logind: New session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd: Starting Session 13 of user vagrant.
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+# nano /opt/watcgh[K[Khdog.sh 
+[?1049h[1;53r(B[m[4l[?7h[?12l[?25h[?1h=[?1h=[?1h=[39;49m[39;49m(B[m[H[2J(B[0;7m  GNU nano 2.3.1                                File: /opt/watchdog.sh                                                                      [3;1H(B[m#!/bin/bash
+[5dWORD=$1
+[6dLOG=$2
+[7dDATE=`date`
+[9dif grep $WORD $LOG &> /dev/null
+[10dthen[11dlogger "$DATE: I found word, Master!"
+[12delse[13dexit 0
+[14dfi[51;62H(B[0;7m[ Read 12 lines ]
+[52d^G(B[m Get Help[52;24H(B[0;7m^O(B[m WriteOut[52;47H(B[0;7m^R(B[m Read File[52;70H(B[0;7m^Y(B[m Prev Page[52;93H(B[0;7m^K(B[m Cut Text[52;116H(B[0;7m^C(B[m Cur Pos
+[53d(B[0;7m^X(B[m Exit[53;24H(B[0;7m^J(B[m Justify[53;47H(B[0;7m^W(B[m Where Is[53;70H(B[0;7m^V(B[m Next Page[53;93H(B[0;7m^U(B[m UnCut Text[53;116H(B[0;7m^T(B[m To Spell
+[3d[52d[J[53;140H[53;1H[?1049l
+[?1l># 
+# 
+# 
+# nano /etc/system
+systemd/            system-release      system-release-cpe  
+[root@lvm vagrant]# nano /etc/system
+systemd/            system-release      system-release-cpe  
+[root@lvm vagrant]# nano /etc/systemd/system/watchdog.service 
+[?1049h[1;53r(B[m[4l[?7h[?12l[?25h[?1h=[?1h=[?1h=[39;49m[39;49m(B[m[H[2J(B[0;7m  GNU nano 2.3.1                         File: /etc/systemd/system/watchdog.service                                                         [3;1H(B[m[Unit]
+[4dDescription=My watchlog service
+[6d[Service]
+[7dType=oneshot
+[8dEnvironmentFile=/etc/sysconfig/watchdog
+[9dExecStart=/opt/watchlog.sh $WORD $LOG[51;63H(B[0;7m[ Read 8 lines ]
+[52d^G(B[m Get Help[52;24H(B[0;7m^O(B[m WriteOut[52;47H(B[0;7m^R(B[m Read File[52;70H(B[0;7m^Y(B[m Prev Page[52;93H(B[0;7m^K(B[m Cut Text[52;116H(B[0;7m^C(B[m Cur Pos
+[53d(B[0;7m^X(B[m Exit[53;24H(B[0;7m^J(B[m Justify[53;47H(B[0;7m^W(B[m Where Is[53;70H(B[0;7m^V(B[m Next Page[53;93H(B[0;7m^U(B[m UnCut Text[53;116H(B[0;7m^T(B[m To Spell
+[3d[4d[5d[6d[7d[8d[9d[10d[11d[A[AExecSta	t=/opt/
+[51d[K[9;17Hatch[1;131H(B[0;7mModified[9;21H(B[m[1Pdog.sh $WORD $LOG[9;22H[51;55H(B[0;7m[ XOFF ignored, mumble mumble ][9;22H(B[m
+[51d(B[0;7mSave modified buffer (ANSWERING "No" WILL DESTROY CHANGES) ?                                                                                [52;1H Y(B[m Yes[K
+[53d(B[0;7m N(B[m No  [53;17H(B[0;7m^C(B[m Cancel[K[51;62H
+(B[0;7mFile Name to Write: /etc/systemd/system/watchdog.service    
+[52d^G(B[m Get Help[52;36H(B[0;7mM-D(B[m DOS Format[52;71H(B[0;7mM-A(B[m Append[52;106H(B[0;7mM-B(B[m Backup File
+[53d(B[0;7m^C(B[m Cancel	         [53;36H(B[0;7mM-M(B[m Mac Format[53;71H(B[0;7mM-P(B[m Prepend[51;57H
+[52d[39;49m(B[m[J[1;131H(B[0;7m        [51;61H(B[m[1K (B[0;7m[ Wrote 8 lines ](B[m[K[53;140H[53;1H[?1049l
+[?1l># 
+# 
+# 
+# nano /etc/systemd/system/watchdog.service 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[20Popt/watchdog.sh[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat /var/log/messages[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctail /var/log/messages-f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csystemctl start watchdog.timer 
+# 
+# 
+# 
+# systemctl start watchdog.timer 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[11@nano /etc/systemd/system/watchdog.service[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[20Popt/watchdog.sh[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat /var/log/messages[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctail /var/log/messages
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+# tail /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csystemctl start watchdog.timer 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[11@nano /etc/systemd/system/watchdog.service[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[20Popt/watchdog.sh[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat /var/log/messages[C
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ctail /var/log/messages-f /var/log/messages
+Mar 14 03:19:46 localhost systemd-logind: Removed session 13.
+Mar 14 03:19:55 localhost systemd: Started Session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+^C
+# tail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ktail -f /var/log/messages[3P/var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csystemctl start watchdog.timer [1@r[1@e[1P[1P[1P[1P[1P[1P[1P[1@s[1@t[1@o[1@p
+# 
+# 
+# 
+# systemctl stop watchdog.timer 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[5Ptail -f /var/log/messages
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+Mar 14 03:36:32 localhost systemd: Stopped Run watchlog script every 30 second.
+Mar 14 03:36:32 localhost systemd: Stopping Run watchlog script every 30 second.
+/^C
+# l[K
+# 
+# 
+# ls /var/log\
+> ^C
+# ls /var/log\[K
+[0m[38;5;27manaconda[0m  boot.log  [38;5;27mchrony[0m  dmesg               lastlog  messages  [38;5;27mrhsm[0m    spooler   [38;5;27mtuned[0m         wtmp
+[38;5;27maudit[0m     btmp      cron    grubby_prune_debug  maillog  [38;5;27mqemu-ga[0m   secure  tallylog  watchdog.log  yum.log
+# cat /var/log/watchdog.log 
+    [2019-03-02 UTC+8 02:00] mail is OK
+    [2019-03-02 UTC+8 02:15] mail is OK
+    [2019-03-02 UTC+8 02:30] mail is OK
+    [2019-03-02 UTC+8 02:45] mail is OK
+    [2019-03-02 UTC+8 03:00] mail is OK
+    [2019-03-02 UTC+8 03:15] mail is OK
+    [2019-03-02 UTC+8 03:30] mail is pawned!! ALERT
+    [2019-03-02 UTC+8 03:45] mail is OK
+    [2019-03-02 UTC+8 04:00] mail is OK
+    [2019-03-02 UTC+8 04:15] mail is OK
+    [2019-03-02 UTC+8 04:30] mail is pawned!! ALERT
+    [2019-03-02 UTC+8 02:45] mail is OK
+    [2019-03-02 UTC+8 03:00] mail is OK
+    [2019-03-02 UTC+8 03:15] mail is OK# 
+# 
+# 
+# 
+# cat /var/log/watchdog.log 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[15Pls /var/log\tail -f /var/log/messages
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+Mar 14 03:36:32 localhost systemd: Stopped Run watchlog script every 30 second.
+Mar 14 03:36:32 localhost systemd: Stopping Run watchlog script every 30 second.
+^C
+# tail -f /var/log/messages
+Mar 14 03:19:55 localhost systemd-logind: New session 14 of user vagrant.
+Mar 14 03:19:55 localhost systemd: Starting Session 14 of user vagrant.
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+Mar 14 03:36:32 localhost systemd: Stopped Run watchlog script every 30 second.
+Mar 14 03:36:32 localhost systemd: Stopping Run watchlog script every 30 second.
+^C
+# tail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ccat /var/log/watchdog.log 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[15Pls /var/log\tail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csystemctl stop watchdog.timer [C[1P[1P[1@a[1@r[1@t
+# 
+# 
+# 
+# systemctl start watchdog.timer 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Ptail -f /var/log/messages
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+Mar 14 03:36:32 localhost systemd: Stopped Run watchlog script every 30 second.
+Mar 14 03:36:32 localhost systemd: Stopping Run watchlog script every 30 second.
+Mar 14 03:40:04 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:40:04 localhost systemd: Starting Run watchlog script every 30 second.
+^C
+# tail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ktail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Csystemctl start watchdog.timer 
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[6Ptail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+# 
+# 
+# tail -f /var/log/messages
+Mar 14 03:20:01 localhost su: (to root) vagrant on pts/0
+Mar 14 03:23:30 localhost systemd-logind: Removed session 3.
+Mar 14 03:24:14 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:24:14 localhost systemd: Starting Run watchlog script every 30 second.
+Mar 14 03:28:01 localhost systemd: Starting Cleanup of Temporary Directories...
+Mar 14 03:28:01 localhost systemd: Started Cleanup of Temporary Directories.
+Mar 14 03:36:32 localhost systemd: Stopped Run watchlog script every 30 second.
+Mar 14 03:36:32 localhost systemd: Stopping Run watchlog script every 30 second.
+Mar 14 03:40:04 localhost systemd: Started Run watchlog script every 30 second.
+Mar 14 03:40:04 localhost systemd: Starting Run watchlog script every 30 second.
+^C
+# tail -f /var/log/messages
+[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Kstrace /etc/[K[K[K[K[K/opt/watchdog.sh 
+bash: strace: command not found
+# exit
+exit
+]0;vagrant@lvm:~[vagrant@lvm ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+
+$ exit
+exit
+
+Script done on 2019-03-14 11:54:39+0800
