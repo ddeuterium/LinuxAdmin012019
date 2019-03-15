@@ -8,6 +8,14 @@
 
 [watchlog.service](https://github.com/shaadowsky/LinuxAdmin012019/blob/master/hw08.%20System%20init.%20Systemd/1/watchlog.service) unit-файл самого сервиса. Сделан как oneshot, для запуска демоном используется notify и др.
 
-[watchlog.timer](https://github.com/shaadowsky/LinuxAdmin012019/blob/master/hw08.%20System%20init.%20Systemd/1/watchlog.timer) Таймер, несмотря на указание запуска раз в 30 секунд, будет отрабатывать ежеминутно из-за глобальной переменной точности systemd.timer
+[watchlog.timer](https://github.com/shaadowsky/LinuxAdmin012019/blob/master/hw08.%20System%20init.%20Systemd/1/watchlog.timer) Таймер, несмотря на указание запуска раз в 30 секунд, будет отрабатывать ежеминутно из-за глобальной переменной точности systemd.timer. Можно поменять значение в _WantedBy=_ c _multi-user.target_ на _timer.target_. Это нужно для того, чтобы после перезагрузки таймер автоматом подхватился
 
 если не взлетают скрипты надо сделать _chmod +x <script>_
+
+запуск службы/таймера
+
+    systemctl start watchlog.timer
+  
+посмотреть как отрабатывает скрипт
+
+    tail -f /var/log/messages
