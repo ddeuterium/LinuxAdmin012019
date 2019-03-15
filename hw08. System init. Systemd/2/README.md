@@ -11,8 +11,8 @@
 
 проверяем 
 
-# systemctl start spawn-fcgi
-# systemctl status spawn-fcgi
+        # systemctl start spawn-fcgi
+        # systemctl status spawn-fcgi
 
     spawn-fcgi.service - Spawn-fcgi startup service by Otus
        Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; disabled; vendor preset: disabled)
