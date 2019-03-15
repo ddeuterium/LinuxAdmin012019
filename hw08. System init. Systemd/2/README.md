@@ -1,14 +1,13 @@
-$ sudo su
-# yum install epel-release -y && yum install spawn-fcgi php php-cli
-
+    $ sudo su
+    # yum install epel-release -y && yum install spawn-fcgi php php-cli
     Complete!
 
 раскомментировать строчки с переменными SOCKET и OPTIONS. Можно сделать двумя способами:
 1. подкинуть [готовый файл](https://github.com/shaadowsky/LinuxAdmin012019/blob/master/hw08.%20System%20init.%20Systemd/2/spawn-fcgi)
 2. или отредактировать имеющийся:
 
-    # sed -i '7s/^.//' /etc/sysconfig/spawn-fcgi 
-    # sed -i '8s/^.//' /etc/sysconfig/spawn-fcgi 
+        # sed -i '7s/^.//' /etc/sysconfig/spawn-fcgi 
+        # sed -i '8s/^.//' /etc/sysconfig/spawn-fcgi 
 
 проверяем 
 
