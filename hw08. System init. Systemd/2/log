@@ -1,0 +1,438 @@
+Script started on 2019-03-14 23:31:24+0800
+]0;shaad@shaad-mobile: ~/otus/hw08. System init. Systemd[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw08. System init. Systemd[00m$ vssh
+Last login: Thu Mar 14 15:16:51 2019 from 10.0.2.2
+]0;vagrant@lvm:~[?1034h[vagrant@lvm ~]$ 
+]0;vagrant@lvm:~[vagrant@lvm ~]$ 
+]0;vagrant@lvm:~[vagrant@lvm ~]$ sudo su
+]0;root@lvm:/home/vagrant[?1034h[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# yum install epel-release -y && yum install spawn-fcgi php php-cli
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+ * base: mirror.corbina.net
+ * extras: mirror.corbina.net
+ * updates: mirror.corbina.net
+Resolving Dependencies
+--> Running transaction check
+---> Package epel-release.noarch 0:7-11 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+============================================================================================================================================
+ Package                               Arch                            Version                        Repository                       Size
+============================================================================================================================================
+Installing:
+ epel-release                          noarch                          7-11                           extras                           15 k
+
+Transaction Summary
+============================================================================================================================================
+Install  1 Package
+
+Total download size: 15 k
+Installed size: 24 k
+Downloading packages:
+epel-release-7-11.noarch.rpm                            0% [                                              ]  0.0 B/s |    0 B  --:--:-- ETA epel-release-7-11.noarch.rpm                                                                                         |  15 kB  00:00:00     
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : epel-release-7-11.noarch [                                                                                             ] 1/1  Installing : epel-release-7-11.noarch [######                                                                                       ] 1/1  Installing : epel-release-7-11.noarch [##########                                                                                   ] 1/1  Installing : epel-release-7-11.noarch [#############                                                                                ] 1/1  Installing : epel-release-7-11.noarch [#########################                                                                    ] 1/1  Installing : epel-release-7-11.noarch [############################################################################################ ] 1/1  Installing : epel-release-7-11.noarch                                                                                                 1/1 
+  Verifying  : epel-release-7-11.noarch                                                                                                 1/1 
+
+Installed:
+  epel-release.noarch 0:7-11                                                                                                                
+
+Complete!
+Loaded plugins: fastestmirror
+Loading mirror speeds from cached hostfile
+epel/x86_64/metalink                                                                                                 |  32 kB  00:00:00     
+ * base: mirror.corbina.net
+ * epel: mirror.logol.ru
+ * extras: mirror.corbina.net
+ * updates: mirror.corbina.net
+epel                                                                                                                 | 4.7 kB  00:00:00     
+(1/3): epel/x86_64/group_gz                                                                                          |  88 kB  00:00:00     
+(2/3): epel/x86_64/updateinfo                           12% [=====-                                       ]  0.0 B/s | 988 kB  --:--:-- ETA (2/3): epel/x86_64/updateinfo                                                                                        | 1.0 MB  00:00:00     
+(3/3): epel/x86_64/primary_db                           23% [==========                                   ] 668 kB/s | 1.8 MB  00:00:09 ETA (3/3): epel/x86_64/primary_db                           33% [===============                              ] 793 kB/s | 2.6 MB  00:00:06 ETA (3/3): epel/x86_64/primary_db                           44% [====================                         ] 920 kB/s | 3.4 MB  00:00:04 ETA (3/3): epel/x86_64/primary_db                           56% [=========================                    ] 1.0 MB/s | 4.4 MB  00:00:03 ETA (3/3): epel/x86_64/primary_db                           66% [=============================-               ] 1.1 MB/s | 5.1 MB  00:00:02 ETA (3/3): epel/x86_64/primary_db                           72% [================================-            ] 1.1 MB/s | 5.6 MB  00:00:01 ETA (3/3): epel/x86_64/primary_db                           80% [====================================         ] 1.2 MB/s | 6.2 MB  00:00:01 ETA (3/3): epel/x86_64/primary_db                           89% [========================================     ] 1.2 MB/s | 6.9 MB  00:00:00 ETA (3/3): epel/x86_64/primary_db                           98% [============================================ ] 1.3 MB/s | 7.6 MB  00:00:00 ETA (3/3): epel/x86_64/primary_db                                                                                        | 6.6 MB  00:00:02     
+Resolving Dependencies
+--> Running transaction check
+---> Package php.x86_64 0:5.4.16-46.el7 will be installed
+--> Processing Dependency: php-common(x86-64) = 5.4.16-46.el7 for package: php-5.4.16-46.el7.x86_64
+--> Processing Dependency: httpd-mmn = 20120211x8664 for package: php-5.4.16-46.el7.x86_64
+--> Processing Dependency: httpd for package: php-5.4.16-46.el7.x86_64
+---> Package php-cli.x86_64 0:5.4.16-46.el7 will be installed
+---> Package spawn-fcgi.x86_64 0:1.6.3-5.el7 will be installed
+--> Running transaction check
+---> Package httpd.x86_64 0:2.4.6-88.el7.centos will be installed
+--> Processing Dependency: httpd-tools = 2.4.6-88.el7.centos for package: httpd-2.4.6-88.el7.centos.x86_64
+--> Processing Dependency: /etc/mime.types for package: httpd-2.4.6-88.el7.centos.x86_64
+--> Processing Dependency: libaprutil-1.so.0()(64bit) for package: httpd-2.4.6-88.el7.centos.x86_64
+--> Processing Dependency: libapr-1.so.0()(64bit) for package: httpd-2.4.6-88.el7.centos.x86_64
+---> Package php-common.x86_64 0:5.4.16-46.el7 will be installed
+--> Processing Dependency: libzip.so.2()(64bit) for package: php-common-5.4.16-46.el7.x86_64
+--> Running transaction check
+---> Package apr.x86_64 0:1.4.8-3.el7_4.1 will be installed
+---> Package apr-util.x86_64 0:1.5.2-6.el7 will be installed
+---> Package httpd-tools.x86_64 0:2.4.6-88.el7.centos will be installed
+---> Package libzip.x86_64 0:0.10.1-8.el7 will be installed
+---> Package mailcap.noarch 0:2.1.41-2.el7 will be installed
+--> Finished Dependency Resolution
+
+Dependencies Resolved
+
+============================================================================================================================================
+ Package                           Arch                         Version                                    Repository                  Size
+============================================================================================================================================
+Installing:
+ php                               x86_64                       5.4.16-46.el7                              base                       1.4 M
+ php-cli                           x86_64                       5.4.16-46.el7                              base                       2.7 M
+ spawn-fcgi                        x86_64                       1.6.3-5.el7                                epel                        18 k
+Installing for dependencies:
+ apr                               x86_64                       1.4.8-3.el7_4.1                            base                       103 k
+ apr-util                          x86_64                       1.5.2-6.el7                                base                        92 k
+ httpd                             x86_64                       2.4.6-88.el7.centos                        base                       2.7 M
+ httpd-tools                       x86_64                       2.4.6-88.el7.centos                        base                        90 k
+ libzip                            x86_64                       0.10.1-8.el7                               base                        48 k
+ mailcap                           noarch                       2.1.41-2.el7                               base                        31 k
+ php-common                        x86_64                       5.4.16-46.el7                              base                       565 k
+
+Transaction Summary
+============================================================================================================================================
+Install  3 Packages (+7 Dependent packages)
+
+Total download size: 7.7 M
+Installed size: 27 M
+Is this ok [y/d/N]: y
+Is this ok [y/d/N]: y
+Downloading packages:
+(2/10): apr-util-1.5.2-6.el7.x86_64.rpm                 0% [                                              ]  0.0 B/s |    0 B  --:--:-- ETA (1/10): apr-1.4.8-3.el7_4.1.x86_64.rpm                                                                               | 103 kB  00:00:00     
+(2/10): httpd-tools-2.4.6-88.el7.centos.x86_64.rpm                                                                   |  90 kB  00:00:00     
+(3/10): mailcap-2.1.41-2.el7.noarch.rpm                                                                              |  31 kB  00:00:00     
+(5/10): httpd-2.4.6-88.el7.centos.x86_64.rpm            9% [====                                          ]  0.0 B/s | 735 kB  --:--:-- ETA (4/10): libzip-0.10.1-8.el7.x86_64.rpm                                                                               |  48 kB  00:00:00     
+(5/10): apr-util-1.5.2-6.el7.x86_64.rpm                                                                              |  92 kB  00:00:00     
+(7/10): php-5.4.16-46.el7.x86_64.rpm                    17% [=======-                                     ] 951 kB/s | 1.3 MB  00:00:06 ETA (7/10): php-5.4.16-46.el7.x86_64.rpm                    28% [============-                                ] 1.0 MB/s | 2.2 MB  00:00:05 ETA warning: /var/cache/yum/x86_64/7/epel/packages/spawn-fcgi-1.6.3-5.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID 352c64e5: NOKEY
+Public key for spawn-fcgi-1.6.3-5.el7.x86_64.rpm is not installed
+(6/10): spawn-fcgi-1.6.3-5.el7.x86_64.rpm                                                                            |  18 kB  00:00:00     
+(9/10): php-cli-5.4.16-46.el7.x86_64.rpm                37% [================-                            ] 1.1 MB/s | 2.9 MB  00:00:04 ETA (9/10): php-cli-5.4.16-46.el7.x86_64.rpm                46% [=====================                        ] 1.2 MB/s | 3.6 MB  00:00:03 ETA (7/10): php-common-5.4.16-46.el7.x86_64.rpm                                                                          | 565 kB  00:00:01     
+(10/10): php-cli-5.4.16-46.el7.x86_64.rpm               56% [=========================-                   ] 1.3 MB/s | 4.4 MB  00:00:02 ETA (10/10): php-cli-5.4.16-46.el7.x86_64.rpm               68% [===============================              ] 1.4 MB/s | 5.3 MB  00:00:01 ETA (8/10): httpd-2.4.6-88.el7.centos.x86_64.rpm            81% [====================================-        ] 1.5 MB/s | 6.3 MB  00:00:00 ETA (8/10): php-5.4.16-46.el7.x86_64.rpm                                                                                 | 1.4 MB  00:00:02     
+(9/10): httpd-2.4.6-88.el7.centos.x86_64.rpm                                                                         | 2.7 MB  00:00:03     
+(10/10): php-cli-5.4.16-46.el7.x86_64.rpm               99% [============================================-] 1.6 MB/s | 7.7 MB  00:00:00 ETA (10/10): php-cli-5.4.16-46.el7.x86_64.rpm                                                                            | 2.7 MB  00:00:02     
+--------------------------------------------------------------------------------------------------------------------------------------------
+Total                                                                                                       2.1 MB/s | 7.7 MB  00:00:03     
+Retrieving key from file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+Importing GPG key 0x352C64E5:
+ Userid     : "Fedora EPEL (7) <epel@fedoraproject.org>"
+ Fingerprint: 91e9 7d7c 4a5e 96f1 7f3e 888f 6a2f aea2 352c 64e5
+ Package    : epel-release-7-11.noarch (@extras)
+ From       : /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
+Is this ok [y/N]: y
+Running transaction check
+Running transaction test
+Transaction test succeeded
+Running transaction
+  Installing : apr-1.4.8-3.el7_4.1.x86_64 [                                                                                         ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64 [########################                                                                 ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64 [##################################################                                       ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64 [############################################################################             ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64 [#############################################################################            ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64 [################################################################################         ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64 [######################################################################################## ]  1/10  Installing : apr-1.4.8-3.el7_4.1.x86_64                                                                                              1/10 
+  Installing : apr-util-1.5.2-6.el7.x86_64 [                                                                                        ]  2/10  Installing : apr-util-1.5.2-6.el7.x86_64 [#############################                                                           ]  2/10  Installing : apr-util-1.5.2-6.el7.x86_64 [#########################################################                               ]  2/10  Installing : apr-util-1.5.2-6.el7.x86_64 [###########################################################################             ]  2/10  Installing : apr-util-1.5.2-6.el7.x86_64 [#############################################################################           ]  2/10  Installing : apr-util-1.5.2-6.el7.x86_64 [####################################################################################### ]  2/10  Installing : apr-util-1.5.2-6.el7.x86_64                                                                                             2/10 
+  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [                                                                             ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [#######################                                                      ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [#################################                                            ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [########################################                                     ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [#################################################                            ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [#####################################################                        ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [###########################################################                  ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [######################################################################       ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [########################################################################     ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [#########################################################################    ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [##########################################################################   ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [###########################################################################  ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64 [############################################################################ ]  3/10  Installing : httpd-tools-2.4.6-88.el7.centos.x86_64                                                                                  3/10 
+  Installing : libzip-0.10.1-8.el7.x86_64 [                                                                                         ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [#########                                                                                ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [###################                                                                      ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [#############################                                                            ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [#############################################################################            ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [###############################################################################          ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [################################################################################         ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [####################################################################################     ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [######################################################################################   ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [#######################################################################################  ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64 [######################################################################################## ]  4/10  Installing : libzip-0.10.1-8.el7.x86_64                                                                                              4/10 
+  Installing : php-common-5.4.16-46.el7.x86_64 [                                                                                    ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##                                                                                  ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [####                                                                                ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#####                                                                               ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [######                                                                              ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [########                                                                            ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#########                                                                           ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##########                                                                          ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [############                                                                        ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#############                                                                       ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###############                                                                     ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [################                                                                    ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#################                                                                   ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###################                                                                 ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [####################                                                                ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#####################                                                               ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#######################                                                             ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [########################                                                            ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##########################                                                          ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###########################                                                         ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [############################                                                        ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##############################                                                      ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###############################                                                     ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [################################                                                    ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##################################                                                  ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [####################################                                                ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [######################################                                              ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [########################################                                            ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#########################################                                           ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##########################################                                          ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###########################################                                         ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#############################################                                       ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###############################################                                     ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#################################################                                   ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###################################################                                 ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [####################################################                                ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#####################################################                               ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#######################################################                             ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [########################################################                            ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#########################################################                           ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###########################################################                         ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [############################################################                        ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##############################################################                      ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###############################################################                     ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [################################################################                    ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##################################################################                  ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [####################################################################                ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#####################################################################               ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#######################################################################             ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#########################################################################           ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###########################################################################         ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [#############################################################################       ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##############################################################################      ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [###############################################################################     ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [################################################################################    ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [##################################################################################  ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64 [################################################################################### ]  5/10  Installing : php-common-5.4.16-46.el7.x86_64                                                                                         5/10 
+  Installing : php-cli-5.4.16-46.el7.x86_64 [                                                                                       ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#                                                                                      ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##                                                                                     ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###                                                                                    ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [####                                                                                   ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#####                                                                                  ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [######                                                                                 ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#######                                                                                ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [########                                                                               ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#########                                                                              ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##########                                                                             ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###########                                                                            ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [############                                                                           ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#############                                                                          ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##############                                                                         ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###############                                                                        ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [################                                                                       ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#################                                                                      ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##################                                                                     ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###################                                                                    ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [####################                                                                   ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#####################                                                                  ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [######################                                                                 ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#######################                                                                ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [########################                                                               ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#########################                                                              ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##########################                                                             ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###########################                                                            ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [############################                                                           ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#############################                                                          ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##############################                                                         ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###############################                                                        ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [################################                                                       ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#################################                                                      ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##################################                                                     ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###################################                                                    ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [####################################                                                   ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#####################################                                                  ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [######################################                                                 ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#######################################                                                ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [########################################                                               ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#########################################                                              ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##########################################                                             ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###########################################                                            ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [############################################                                           ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#############################################                                          ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##############################################                                         ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###############################################                                        ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [################################################                                       ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#################################################                                      ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##################################################                                     ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###################################################                                    ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [####################################################                                   ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#####################################################                                  ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [######################################################                                 ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#######################################################                                ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [########################################################                               ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#########################################################                              ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##########################################################                             ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###########################################################                            ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [############################################################                           ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#############################################################                          ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##############################################################                         ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###############################################################                        ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [################################################################                       ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#################################################################                      ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##################################################################                     ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###################################################################                    ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [####################################################################                   ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#####################################################################                  ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [######################################################################                 ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#######################################################################                ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [########################################################################               ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#########################################################################              ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##########################################################################             ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###########################################################################            ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [############################################################################           ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#############################################################################          ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##############################################################################         ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###############################################################################        ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [################################################################################       ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#################################################################################      ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [##################################################################################     ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###################################################################################    ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [####################################################################################   ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [#####################################################################################  ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64 [###################################################################################### ]  6/10  Installing : php-cli-5.4.16-46.el7.x86_64                                                                                            6/10 
+  Installing : mailcap-2.1.41-2.el7.noarch [                                                                                        ]  7/10  Installing : mailcap-2.1.41-2.el7.noarch [#######################################################################                 ]  7/10  Installing : mailcap-2.1.41-2.el7.noarch [#########################################################################               ]  7/10  Installing : mailcap-2.1.41-2.el7.noarch [#################################################################################       ]  7/10  Installing : mailcap-2.1.41-2.el7.noarch [####################################################################################### ]  7/10  Installing : mailcap-2.1.41-2.el7.noarch                                                                                             7/10 
+  Installing : httpd-2.4.6-88.el7.centos.x86_64 [                                                                                   ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#                                                                                  ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##                                                                                 ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###                                                                                ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [####                                                                               ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#####                                                                              ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [######                                                                             ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#######                                                                            ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [########                                                                           ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#########                                                                          ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##########                                                                         ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###########                                                                        ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [############                                                                       ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#############                                                                      ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##############                                                                     ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###############                                                                    ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [################                                                                   ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#################                                                                  ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##################                                                                 ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###################                                                                ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [####################                                                               ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#####################                                                              ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [######################                                                             ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#######################                                                            ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [########################                                                           ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#########################                                                          ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##########################                                                         ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###########################                                                        ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [############################                                                       ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#############################                                                      ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##############################                                                     ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###############################                                                    ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [################################                                                   ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#################################                                                  ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##################################                                                 ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###################################                                                ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [####################################                                               ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#####################################                                              ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [######################################                                             ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#######################################                                            ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [########################################                                           ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#########################################                                          ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##########################################                                         ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###########################################                                        ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [############################################                                       ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#############################################                                      ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##############################################                                     ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###############################################                                    ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [################################################                                   ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#################################################                                  ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##################################################                                 ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###################################################                                ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [####################################################                               ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#####################################################                              ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [######################################################                             ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#######################################################                            ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [########################################################                           ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#########################################################                          ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##########################################################                         ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###########################################################                        ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [############################################################                       ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#############################################################                      ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##############################################################                     ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###############################################################                    ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [################################################################                   ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#################################################################                  ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##################################################################                 ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###################################################################                ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [####################################################################               ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#####################################################################              ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [######################################################################             ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#######################################################################            ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [########################################################################           ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#########################################################################          ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##########################################################################         ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###########################################################################        ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [############################################################################       ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#############################################################################      ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [##############################################################################     ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [###############################################################################    ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [################################################################################   ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [#################################################################################  ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64 [################################################################################## ]  8/10  Installing : httpd-2.4.6-88.el7.centos.x86_64                                                                                        8/10 
+  Installing : php-5.4.16-46.el7.x86_64 [                                                                                           ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#                                                                                          ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###                                                                                        ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [####                                                                                       ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [######                                                                                     ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#######                                                                                    ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#########                                                                                  ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##########                                                                                 ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [############                                                                               ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#############                                                                              ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###############                                                                            ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [################                                                                           ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##################                                                                         ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###################                                                                        ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [####################                                                                       ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#####################                                                                      ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [######################                                                                     ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [########################                                                                   ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#########################                                                                  ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##########################                                                                 ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [############################                                                               ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#############################                                                              ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##############################                                                             ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###############################                                                            ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#################################                                                          ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##################################                                                         ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###################################                                                        ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#####################################                                                      ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [######################################                                                     ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [########################################                                                   ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##########################################                                                 ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###########################################                                                ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [############################################                                               ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##############################################                                             ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###############################################                                            ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#################################################                                          ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##################################################                                         ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###################################################                                        ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [####################################################                                       ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#####################################################                                      ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#######################################################                                    ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [########################################################                                   ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##########################################################                                 ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###########################################################                                ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [############################################################                               ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#############################################################                              ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##############################################################                             ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [################################################################                           ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#################################################################                          ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###################################################################                        ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [####################################################################                       ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [######################################################################                     ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#######################################################################                    ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#########################################################################                  ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##########################################################################                 ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [############################################################################               ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#############################################################################              ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###############################################################################            ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [################################################################################           ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [##################################################################################         ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [###################################################################################        ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#####################################################################################      ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [######################################################################################     ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [########################################################################################   ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [#########################################################################################  ]  9/10  Installing : php-5.4.16-46.el7.x86_64 [########################################################################################## ]  9/10  Installing : php-5.4.16-46.el7.x86_64                                                                                                9/10 
+  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [                                                                                      ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [######                                                                                ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [#######                                                                               ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [###################################################################                   ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [#########################################################################             ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [##############################################################################        ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [################################################################################      ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64 [##################################################################################### ] 10/10  Installing : spawn-fcgi-1.6.3-5.el7.x86_64                                                                                          10/10 
+  Verifying  : spawn-fcgi-1.6.3-5.el7.x86_64                                                                                           1/10 
+  Verifying  : mailcap-2.1.41-2.el7.noarch                                                                                             2/10 
+  Verifying  : apr-util-1.5.2-6.el7.x86_64                                                                                             3/10 
+  Verifying  : php-5.4.16-46.el7.x86_64                                                                                                4/10 
+  Verifying  : httpd-tools-2.4.6-88.el7.centos.x86_64                                                                                  5/10 
+  Verifying  : php-cli-5.4.16-46.el7.x86_64                                                                                            6/10 
+  Verifying  : libzip-0.10.1-8.el7.x86_64                                                                                              7/10 
+  Verifying  : httpd-2.4.6-88.el7.centos.x86_64                                                                                        8/10 
+  Verifying  : php-common-5.4.16-46.el7.x86_64                                                                                         9/10 
+  Verifying  : apr-1.4.8-3.el7_4.1.x86_64                                                                                             10/10 
+
+Installed:
+  php.x86_64 0:5.4.16-46.el7                 php-cli.x86_64 0:5.4.16-46.el7                 spawn-fcgi.x86_64 0:1.6.3-5.el7                
+
+Dependency Installed:
+  apr.x86_64 0:1.4.8-3.el7_4.1  apr-util.x86_64 0:1.5.2-6.el7  httpd.x86_64 0:2.4.6-88.el7.centos  httpd-tools.x86_64 0:2.4.6-88.el7.centos 
+  libzip.x86_64 0:0.10.1-8.el7  mailcap.noarch 0:2.1.41-2.el7  php-common.x86_64 0:5.4.16-46.el7  
+
+Complete!
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cat[K[K[Kcat[K[K[K
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cat /etc/sysconfig/spawn-fcgi 
+# You must set some working options before the "spawn-fcgi" service will work.
+# If SOCKET points to a file, then this file is cleaned up by the init script.
+#
+# See spawn-fcgi(1) for all possible options.
+#
+# Example :
+#SOCKET=/var/run/php-fcgi.sock
+#OPTIONS="-u apache -g apache -s $SOCKET -S -M 0600 -C 32 -F 1 -P /var/run/spawn-fcgi.pid -- /usr/bin/php-cgi"
+
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cat /etc/sysconfig/spawn-fcgi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Cyum install epel-release -y && yum install spawn-fcgi php php-cli[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[35Pcat /etc/sysconfig/spawn-fcgi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[K
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -i [1@7[C[C\[K'[K[K[K[K[K[K[K[K[K
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -7i 's/#//' /etc/sysconfig/spawn-fcgi 
+sed: invalid option -- '7'
+Usage: sed [OPTION]... {script-only-if-no-other-script} [input-file]...
+
+  -n, --quiet, --silent
+                 suppress automatic printing of pattern space
+  -e script, --expression=script
+                 add the script to the commands to be executed
+  -f script-file, --file=script-file
+                 add the contents of script-file to the commands to be executed
+  --follow-symlinks
+                 follow symlinks when processing in place
+  -i[SUFFIX], --in-place[=SUFFIX]
+                 edit files in place (makes backup if SUFFIX supplied)
+  -c, --copy
+                 use copy instead of rename when shuffling files in -i mode
+  -b, --binary
+                 does nothing; for compatibility with WIN32/CYGWIN/MSDOS/EMX (
+                 open files in binary mode (CR+LFs are not treated specially))
+  -l N, --line-length=N
+                 specify the desired line-wrap length for the `l' command
+  --posix
+                 disable all GNU extensions.
+  -r, --regexp-extended
+                 use extended regular expressions in the script.
+  -s, --separate
+                 consider files as separate rather than as a single continuous
+                 long stream.
+  -u, --unbuffered
+                 load minimal amounts of data from the input files and flush
+                 the output buffers more often
+  -z, --null-data
+                 separate lines by NUL characters
+  --help
+                 display this help and exit
+  --version
+                 output version information and exit
+
+If no -e, --expression, -f, or --file option is given, then the first
+non-option argument is taken as the sed script to interpret.  All
+remaining arguments are names of input files; if no input files are
+specified, then the standard input is read.
+
+GNU sed home page: <http://www.gnu.org/software/sed/>.
+General help using GNU software: <http://www.gnu.org/gethelp/>.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -7i 's/#//' /etc/sysconfig/spawn-fcgi [1P[1@d[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+sed: invalid option -- '7'
+Usage: sed [OPTION]... {script-only-if-no-other-script} [input-file]...
+
+  -n, --quiet, --silent
+                 suppress automatic printing of pattern space
+  -e script, --expression=script
+                 add the script to the commands to be executed
+  -f script-file, --file=script-file
+                 add the contents of script-file to the commands to be executed
+  --follow-symlinks
+                 follow symlinks when processing in place
+  -i[SUFFIX], --in-place[=SUFFIX]
+                 edit files in place (makes backup if SUFFIX supplied)
+  -c, --copy
+                 use copy instead of rename when shuffling files in -i mode
+  -b, --binary
+                 does nothing; for compatibility with WIN32/CYGWIN/MSDOS/EMX (
+                 open files in binary mode (CR+LFs are not treated specially))
+  -l N, --line-length=N
+                 specify the desired line-wrap length for the `l' command
+  --posix
+                 disable all GNU extensions.
+  -r, --regexp-extended
+                 use extended regular expressions in the script.
+  -s, --separate
+                 consider files as separate rather than as a single continuous
+                 long stream.
+  -u, --unbuffered
+                 load minimal amounts of data from the input files and flush
+                 the output buffers more often
+  -z, --null-data
+                 separate lines by NUL characters
+  --help
+                 display this help and exit
+  --version
+                 output version information and exit
+
+If no -e, --expression, -f, or --file option is given, then the first
+non-option argument is taken as the sed script to interpret.  All
+remaining arguments are names of input files; if no input files are
+specified, then the standard input is read.
+
+GNU sed home page: <http://www.gnu.org/software/sed/>.
+General help using GNU software: <http://www.gnu.org/gethelp/>.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -7d 's/#//' /etc/sysconfig/spawn-fcgi 
+sed: invalid option -- '7'
+Usage: sed [OPTION]... {script-only-if-no-other-script} [input-file]...
+
+  -n, --quiet, --silent
+                 suppress automatic printing of pattern space
+  -e script, --expression=script
+                 add the script to the commands to be executed
+  -f script-file, --file=script-file
+                 add the contents of script-file to the commands to be executed
+  --follow-symlinks
+                 follow symlinks when processing in place
+  -i[SUFFIX], --in-place[=SUFFIX]
+                 edit files in place (makes backup if SUFFIX supplied)
+  -c, --copy
+                 use copy instead of rename when shuffling files in -i mode
+  -b, --binary
+                 does nothing; for compatibility with WIN32/CYGWIN/MSDOS/EMX (
+                 open files in binary mode (CR+LFs are not treated specially))
+  -l N, --line-length=N
+                 specify the desired line-wrap length for the `l' command
+  --posix
+                 disable all GNU extensions.
+  -r, --regexp-extended
+                 use extended regular expressions in the script.
+  -s, --separate
+                 consider files as separate rather than as a single continuous
+                 long stream.
+  -u, --unbuffered
+                 load minimal amounts of data from the input files and flush
+                 the output buffers more often
+  -z, --null-data
+                 separate lines by NUL characters
+  --help
+                 display this help and exit
+  --version
+                 output version information and exit
+
+If no -e, --expression, -f, or --file option is given, then the first
+non-option argument is taken as the sed script to interpret.  All
+remaining arguments are names of input files; if no input files are
+specified, then the standard input is read.
+
+GNU sed home page: <http://www.gnu.org/software/sed/>.
+General help using GNU software: <http://www.gnu.org/gethelp/>.
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -7d 's/#//' /etc/sysconfig/spawn-fcgi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[Ci[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[12Pcat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+# You must set some working options before the "spawn-fcgi" service will work.
+# If SOCKET points to a file, then this file is cleaned up by the init script.
+#
+# See spawn-fcgi(1) for all possible options.
+#
+# Example :
+#SOCKET=/var/run/php-fcgi.sock
+#OPTIONS="-u apache -g apache -s $SOCKET -S -M 0600 -C 32 -F 1 -P /var/run/spawn-fcgi.pid -- /usr/bin/php-cgi"
+
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -i \[K's7s[C/^.//' /etc/sysconfig/spawn-fcgi 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sed -i '7s/^.//' /etc/sysconfig/spawn-fcgi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13Pcat[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C
+# You must set some working options before the "spawn-fcgi" service will work.
+# If SOCKET points to a file, then this file is cleaned up by the init script.
+#
+# See spawn-fcgi(1) for all possible options.
+#
+# Example :
+SOCKET=/var/run/php-fcgi.sock
+#OPTIONS="-u apache -g apache -s $SOCKET -S -M 0600 -C 32 -F 1 -P /var/run/spawn-fcgi.pid -- /usr/bin/php-cgi"
+
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cat /etc/sysconfig/spawn-fcgi [C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[13@sed -i '7s/^.//'[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[C[1P[1@8
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# ^C
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# mv spawn-fcgi.service /etc/systemd/system/
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# cat mv[K[K/etc/systemd/system/spawn-fcgi.service 
+[Unit]
+Description=Spawn-fcgi startup service by Otus
+After=network.target
+
+[Service]
+Type=simple
+PIDFile=/var/run/spawn-fcgi.pid
+EnvironmentFile=/etc/sysconfig/spawn-fcgi
+ExecStart=/usr/bin/spawn-fcgi -n $OPTIONS
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# y[Ksystemctl start spawn-fcgi
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# sus[K[Kystemctl status spawq[Kn-fcgi
+[1;32m●[0m spawn-fcgi.service - Spawn-fcgi startup service by Otus
+   Loaded: loaded (/etc/systemd/system/spawn-fcgi.service; disabled; vendor preset: disabled)
+   Active: [1;32mactive (running)[0m since Fri 2019-03-15 00:25:16 UTC; 13s ago
+ Main PID: 7336 (php-cgi)
+   CGroup: /system.slice/spawn-fcgi.service
+           ├─7336 /usr/bin/php-cgi
+           ├─7337 /usr/bin/php-cgi
+           ├─7338 /usr/bin/php-cgi
+           ├─7339 /usr/bin/php-cgi
+           ├─7340 /usr/bin/php-cgi
+           ├─7341 /usr/bin/php-cgi
+           ├─7342 /usr/bin/php-cgi
+           ├─7343 /usr/bin/php-cgi
+           ├─7344 /usr/bin/php-cgi
+           ├─7345 /usr/bin/php-cgi
+           ├─7346 /usr/bin/php-cgi
+           ├─7347 /usr/bin/php-cgi
+           ├─7348 /usr/bin/php-cgi
+           ├─7349 /usr/bin/php-cgi
+           ├─7350 /usr/bin/php-cgi
+           ├─7351 /usr/bin/php-cgi
+           ├─7352 /usr/bin/php-cgi
+           ├─7353 /usr/bin/php-cgi
+           ├─7354 /usr/bin/php-cgi
+           ├─7355 /usr/bin/php-cgi
+           ├─7356 /usr/bin/php-cgi
+           ├─7357 /usr/bin/php-cgi
+           ├─7358 /usr/bin/php-cgi
+           ├─7359 /usr/bin/php-cgi
+           ├─7360 /usr/bin/php-cgi
+           ├─7361 /usr/bin/php-cgi
+           ├─7362 /usr/bin/php-cgi
+           ├─7363 /usr/bin/php-cgi
+           ├─7364 /usr/bin/php-cgi
+           ├─7365 /usr/bin/php-cgi
+           ├─7366 /usr/bin/php-cgi
+           ├─7367 /usr/bin/php-cgi
+           └─7368 /usr/bin/php-cgi
+
+Mar 15 00:25:16 lvm systemd[1]: Started Spawn-fcgi startup service by Otus.
+Mar 15 00:25:16 lvm systemd[1]: Starting Spawn-fcgi startup service by Otus...
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# 
+]0;root@lvm:/home/vagrant[root@lvm vagrant]# exit
+exit
+]0;vagrant@lvm:~[vagrant@lvm ~]$ exit
+logout
+Connection to 127.0.0.1 closed.
+]0;shaad@shaad-mobile: ~/otus/hw08. System init. Systemd[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw08. System init. Systemd[00m$ exit
+exit
+
+Script done on 2019-03-15 08:26:06+0800
