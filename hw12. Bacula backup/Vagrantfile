@@ -2,22 +2,35 @@
 # vi: set ft=ruby :
 
 Vagrant.configure(2) do |config|
-  config.vm.box = "bento/centos-7.1"
+  config.vm.box = "centos/7"
+  config.vm.box_version = "1804.02"
   config.vm.box_check_update = true
   #config.vm.network "forwarded_port", guest: 80, host: 8080
   #config.vm.synced_folder "../data", "/vagrant_data"
 
   config.vm.provision "shell", inline: <<-SHELL
     set -x
-    yum update -y && yum upgrade -y
+#    yum update -y && yum upgrade -y
     yum install -y nano bacula-client
+    sed -i '7s/SELINUX=enforcing/SELINUX=disabled/g' /etc/selinux/config
+    #reboot
   SHELL
 
   config.vm.define "server", primary: true do |s|
     s.vm.hostname = 'bacula-server'
     s.vm.network "private_network", ip: "192.168.111.10"
     s.vm.provision "shell", inline: <<-SHELL
+# this one for webmin
+      cp /vagrant/webmin.repo /etc/yum.repos.d/
+      rpm --import http://www.webmin.com/jcameron-key.asc
+      yum install -y webmin
+      sed -i '10s/ssl=1/ssl=0/g' /etc/webmin/miniserv.conf
+      /etc/init.d/webmin restart
+      chkconfig webmin on     # webmin now autostarts at boot
+
       yum install -y bacula-director bacula-storage bacula-console postgresql-server
+      yum install -y perl-DBD-Pg
+
       if [[ ! -f /etc/postgres-inited ]]; then
 
         postgresql-setup initdb
@@ -67,6 +80,10 @@ EOF
         chmod -R 700 /bacula
         touch /etc/bacula-inited
       fi
+
+      cp /vagrant/pg_hba.conf /var/lib/pgsql/data/pg_hba.conf
+      chown -R postgres:postgres /var/lib/pgsql/data/pg_hba.conf
+      chmod 400 /var/lib/pgsql/data/pg_hba.conf
 
       systemctl restart bacula-sd bacula-fd bacula-dir
       systemctl enable bacula-sd bacula-fd bacula-dir postgresql
