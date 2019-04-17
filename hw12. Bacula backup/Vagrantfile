@@ -1,5 +1,7 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
+home = ENV['HOME']
+ENV["LC_ALL"] = "en_US.UTF-8"
 
 Vagrant.configure(2) do |config|
   config.vm.box = "centos/7"
@@ -93,8 +95,8 @@ EOF
     SHELL
   end
 
-  config.vm.define "client1" do |c|
-    c.vm.hostname = 'bacula-client1'
+  config.vm.define "client" do |c|
+    c.vm.hostname = 'bacula-client'
     c.vm.network "private_network", ip: "192.168.111.11"
     c.vm.provision "shell", inline: <<-SHELL
       if [[ $(getent passwd eventstore >/dev/null) -ne 0 ]]; then
@@ -111,35 +113,6 @@ EOF
         mkdir -p /etc/bacula/examples/
         cp /etc/bacula/bacula-fd.conf /etc/bacula/examples/.
         cp /vagrant/bacula-fd.client1_conf /etc/bacula/bacula-fd.conf
-        sed -i "s/@@FD_PASSWORD@@/N2I3NzNmYTg3YzMwOWMzN2NhOTljNmMzY/" /etc/bacula/bacula-fd.conf
-        mkdir -p /bacula/restore
-        chown -R bacula:bacula /bacula
-        chmod -R 700 /bacula
-        touch /etc/client-inited
-      fi
-      systemctl restart bacula-fd
-      systemctl enable bacula-fd
-    SHELL
-  end
-
-  config.vm.define "client2" do |c|
-    c.vm.hostname = 'bacula-client2'
-    c.vm.network "private_network", ip: "192.168.111.12"
-    c.vm.provision "shell", inline: <<-SHELL
-      # Create eventstore
-      if [[ $(getent passwd eventstore >/dev/null) -ne 0 ]]; then
-        mkdir -p /var/lib/eventstore
-        groupadd -r eventstore
-        useradd -d /var/lib/eventstore -r -g eventstore eventstore
-        chown -R eventstore:eventstore /var/lib/eventstore
-        chmod -R 755 /var/lib/eventstore
-        touch /etc/sysconfig/eventstore
-      fi
-      if [[ ! -f /etc/client-inited ]]; then
-        #  make sure .conf files are in same directory as Vagrantfile
-        mkdir -p /etc/bacula/examples/
-        cp /etc/bacula/bacula-fd.conf /etc/bacula/examples/.
-        cp /vagrant/bacula-fd.client2_conf /etc/bacula/bacula-fd.conf
         sed -i "s/@@FD_PASSWORD@@/N2I3NzNmYTg3YzMwOWMzN2NhOTljNmMzY/" /etc/bacula/bacula-fd.conf
         mkdir -p /bacula/restore
         chown -R bacula:bacula /bacula
