@@ -20,3 +20,7 @@
 
 перед запуском стенда надо перезагрузить виртуалку - _vagrant reload_. Это делается для отключения selinux.
 
+делалось по [этому мануалу](https://serveradmin.ru/ustanovka-i-nastroyka-zabbix-4-0/) 
+
+TODO настроить фронт заббикса
+TODO установить и настроить statsd+graphana
