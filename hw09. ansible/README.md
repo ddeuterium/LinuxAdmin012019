@@ -1,23 +1,16 @@
 Подготовить стенд на Vagrant как минимум с одним сервером. На этом сервере используя Ansible необходимо развернуть nginx со следующими условиями:
 
 - необходимо использовать модуль yum/apt
-
 - конфигурационные файлы должны быть взяты из шаблона jinja2 с перемененными
-
 - после установки nginx должен быть в режиме enabled в systemd
-
 - должен быть использован notify для старта nginx после установки
-
 - сайт должен слушать на нестандартном порту - 8080, для этого использовать переменные в Ansible
-
 * Сделать все это с использованием Ansible роли
 
 Домашнее задание считается принятым, если:
 
 - предоставлен Vagrantfile и готовый playbook/роль (инструкция по запуску стенда, если посчитаете необходимым)
-
 - после запуска стенда nginx доступен на порту 8080
-
 - при написании playbook/роли соблюдены перечисленные в задании условия
 
 Критерии оценки: зачтено - создан playbook, +1 балл - написана роль
@@ -37,7 +30,7 @@
       executable location = /usr/bin/ansible
       python version = 2.7.15rc1 (default, Nov 12 2018, 14:31:15) [GCC 7.3.0]
 
-поднимаем машину [следующей конфигурации]()
+поднимаем машину [следующей конфигурации](Vagrantfile)
     
     $ vagrant up
 
@@ -73,7 +66,6 @@
       "ping": "pong"
     }
 
-
 чтобы не указывать постоянно инвентори-файл, создаем конфиг и прописываем  в нем инвентори
 
     $ touch ansible.cfg
@@ -84,14 +76,11 @@
     host_key_checking = False
     retry_files_enabled = False
 
-
-
 теперь можно удалить из инвентори инфу о пользователе
 
     $ cat staging/hosts 
     [web]
     nginx ansible_host=127.0.0.1 ansible_port=2222 ansible_private_key_file=.vagrant/machines/nginx/virtualbox/private_key
-
 
 убедимся в доступности хоста
 
@@ -101,13 +90,11 @@
         "ping": "pong"
     }
 
-
  начинаем конфигурировать хост Ad-Hoc командами.  проверим какое ядро установлено на хосте
 
     $ ansible nginx -m command -a "uname -r"
     nginx | CHANGED | rc=0 >>
     3.10.0-862.2.3.el7.x86_64
-
 
 Проверим статус сервиса firewalld
 
@@ -130,7 +117,6 @@
             "Loaded plugins: fastestmirror\nLoading mirror speeds from cached hostfile\n * base: mirror.logol.ru\n * extras: mirror.logol.ru\n * updates: ftp.nsc.ru\nResolving Dependencies\n--> Running transaction check\n---> Package epel-release.noarch 0:7-11 will be installed\n--> Finished Dependency Resolution\n\nDependencies Resolved\n\n================================================================================\n Package                Arch             Version         Repository        Size\n================================================================================\nInstalling:\n epel-release           noarch           7-11            extras            15 k\n\nTransaction Summary\n================================================================================\nInstall  1 Package\n\nTotal download size: 15 k\nInstalled size: 24 k\nDownloading packages:\nRunning transaction check\nRunning transaction test\nTransaction test succeeded\nRunning transaction\n  Installing : epel-release-7-11.noarch                                     1/1 \n  Verifying  : epel-release-7-11.noarch                                     1/1 \n\nInstalled:\n  epel-release.noarch 0:7-11                                                    \n\nComplete!\n"
         ]
     }
-
 
 создаем playbook установки пакета epel-release
 
@@ -161,7 +147,6 @@
     PLAY RECAP ********************************************************************************************************
     nginx                      : ok=2    changed=0    unreachable=0    failed=0   
 
-
  посмотрим на вывод той же команды со state=absent.
 
     $ ansible nginx -m yum -a "name=epel-release state=absent" -b
@@ -176,7 +161,6 @@
             "Loaded plugins: fastestmirror\nResolving Dependencies\n--> Running transaction check\n---> Package epel-release.noarch 0:7-11 will be erased\n--> Finished Dependency Resolution\n\nDependencies Resolved\n\n================================================================================\n Package                Arch             Version        Repository         Size\n================================================================================\nRemoving:\n epel-release           noarch           7-11           @extras            24 k\n\nTransaction Summary\n================================================================================\nRemove  1 Package\n\nInstalled size: 24 k\nDownloading packages:\nRunning transaction check\nRunning transaction test\nTransaction test succeeded\nRunning transaction\n  Erasing    : epel-release-7-11.noarch                                     1/1 \n  Verifying  : epel-release-7-11.noarch                                     1/1 \n\nRemoved:\n  epel-release.noarch 0:7-11                                                    \n\nComplete!\n"
         ]
     }
-
 
 ачешуеть, она его удаляет, кто бы мог подумать
 
@@ -215,8 +199,6 @@
     
       play #1 (nginx): NGINX | Install and configure NGINX	TAGS: []
           TASK TAGS: [epel-package, nginx-package, packages]
-
-
 
 запускаем установку только nginx
     
