@@ -17,7 +17,7 @@ MACHINES = {
     :log2 => {
         :box_name => "centos/7",
         :box_version => "1804.02",
-        :ip_addr => '192.168.12.110'
+        :ip_addr => '192.168.12.120'
     }
 }
 
