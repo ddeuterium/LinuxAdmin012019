@@ -19,3 +19,5 @@
 
 
 !!! NB Перестать уже забывать создавать внутри директории домашки _ansible.cfg_
+
+!!! когда буду проджолжать надо посмотреть [сюда](https://github.com/kyourselfer/OTUS_LinuxAdmin201804/blob/master/lesson21_Journald_ELK/Vagrantfile), и вообще всю [репу](https://github.com/kyourselfer/OTUS_LinuxAdmin201804/tree/master/lesson21_Journald_ELK)
