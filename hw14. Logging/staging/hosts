@@ -1,0 +1,4 @@
+[logging]
+web ansible_host=127.0.0.1 ansible_port=4000 ansible_private_key_file=.vagrant/machines/web/virtualbox/private_key
+log1 ansible_host=127.0.0.1 ansible_port=4010 ansible_private_key_file=.vagrant/machines/log1/virtualbox/private_key
+log2 ansible_host=127.0.0.1 ansible_port=4020 ansible_private_key_file=.vagrant/machines/log2/virtualbox/private_key

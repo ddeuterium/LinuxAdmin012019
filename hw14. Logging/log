@@ -1,0 +1,59 @@
+Script started on 2019-05-16 12:17:51+0800
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ git add ansible.cfg 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ git add README.md 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ git add README.md [2@ansible.cfg[Cexit[Kscriptansible -m ping all -i staging/hosts 
+[1;35m [WARNING]:  * Failed to parse /home/shaad/otus/hw14. Logging/staging/hosts with yaml plugin: Syntax Error while[0m
+[1;35mloading YAML.   did not find expected <document start>  The error appears to have been in[0m
+[1;35m'/home/shaad/otus/hw14. Logging/staging/hosts': line 2, column 1, but may be elsewhere in the file depending on[0m
+[1;35mthe exact syntax problem.  The offending line appears to be:  [logging] web   ansible_host=192.168.12.100[0m
+[1;35mansible_port=22         ansible_user=root       ansible_ ^ here[0m
+[1;35m[0m
+[1;35m [WARNING]:  * Failed to parse /home/shaad/otus/hw14. Logging/staging/hosts with ini plugin:[0m
+[1;35m/home/shaad/otus/hw14. Logging/staging/hosts:2: Expected key=value host variable assignment, got: ansible_[0m
+[1;35m[0m
+[1;35m [WARNING]: Unable to parse /home/shaad/otus/hw14. Logging/staging/hosts as an inventory source[0m
+[1;35m[0m
+[1;35m [WARNING]: No inventory was parsed, only implicit localhost is available[0m
+[1;35m[0m
+[1;35m [WARNING]: provided hosts list is empty, only localhost is available. Note that the implicit localhost does not[0m
+[1;35mmatch 'all'[0m
+[1;35m[0m
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ ansible -m ping all -i staging/hosts 
+[0;32mweb | SUCCESS => {[0m
+[0;32m    "changed": false, [0m
+[0;32m    "ping": "pong"[0m
+[0;32m}[0m
+[0;32mlog2 | SUCCESS => {[0m
+[0;32m    "changed": false, [0m
+[0;32m    "ping": "pong"[0m
+[0;32m}[0m
+[0;32mlog1 | SUCCESS => {[0m
+[0;32m    "changed": false, [0m
+[0;32m    "ping": "pong"[0m
+[0;32m}[0m
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ git add staging/hosts 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ 
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ git commit "[K[K[K[K[K[K[K[K[K[K[K[Kgit add staging/hosts [Kansible -m ping all -i staging/hosts [K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K[K
+[0;32mlog1 | SUCCESS => {[0m
+[0;32m    "changed": false, [0m
+[0;32m    "ping": "pong"[0m
+[0;32m}[0m
+[0;32mweb | SUCCESS => {[0m
+[0;32m    "changed": false, [0m
+[0;32m    "ping": "pong"[0m
+[0;32m}[0m
+[0;32mlog2 | SUCCESS => {[0m
+[0;32m    "changed": false, [0m
+[0;32m    "ping": "pong"[0m
+[0;32m}[0m
+]0;shaad@shaad-mobile: ~/otus/hw14. Logging[01;32mshaad@shaad-mobile[00m:[01;34m~/otus/hw14. Logging[00m$ ansible -i hosts -a 'ls -lah' all
+[1;35m [WARNING]: Unable to parse /home/shaad/otus/hw14. Logging/hosts as an inventory source[0m
+[1;35m[0m
+[1;35m [WARNING]: No inventory was parsed, only implicit localhost is available[0m
+[1;35m[0m
+[1;35m [WARNING]: provided hosts list 
