@@ -19,26 +19,27 @@
 Задание со * (звездочкой)
 Создайте кастомные образы nginx и php, объедините их в docker-compose. После запуска nginx должен показывать php info. Все собранные образы должны быть в docker hub
 
-####basic hw
+#### basic hw
 
     $ docker pull shaadowsky/shaad
     $ docker run --name otus-nginx -dp 80:80 shaadowsky/shaad
 
-####answers
+#### answers
 
 Q. Определите разницу между контейнером и образом
 A. образ - слепок будущих контейнеров, контейнер - запущенный экземпляр образа
 Q. Можно ли в контейнере собрать ядро?
 A. по идее, собрать ядро в контейнере можно, надо собрать окружение для сборки.
 
-####useful links
+#### useful links
 
 https://wiki.merionet.ru/servernye-resheniya/9/kak-rabotat-s-dockerfile/
 https://rtfm.co.ua/docker-dobavit-svoj-obraz-v-repozitorij-na-docker-hub/
 https://habr.com/ru/post/310460/#feedback
 https://www.8host.com/blog/samye-rasprostranyonnye-oshibki-pri-rabote-s-docker/
 
-####memo & history
+#### memo & history
+
 установить docker в ubuntu 1804
 
     # apt install -y docker.io docker
