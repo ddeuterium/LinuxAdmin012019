@@ -19,7 +19,26 @@
 Задание со * (звездочкой)
 Создайте кастомные образы nginx и php, объедините их в docker-compose. После запуска nginx должен показывать php info. Все собранные образы должны быть в docker hub
 
+####basic hw
 
+    $ docker pull shaadowsky/shaad
+    $ docker run --name otus-nginx -dp 80:80 shaadowsky/shaad
+
+####answers
+
+Q. Определите разницу между контейнером и образом
+A. образ - слепок будущих контейнеров, контейнер - запущенный экземпляр образа
+Q. Можно ли в контейнере собрать ядро?
+A. по идее, собрать ядро в контейнере можно, надо собрать окружение для сборки.
+
+####useful links
+
+https://wiki.merionet.ru/servernye-resheniya/9/kak-rabotat-s-dockerfile/
+https://rtfm.co.ua/docker-dobavit-svoj-obraz-v-repozitorij-na-docker-hub/
+https://habr.com/ru/post/310460/#feedback
+https://www.8host.com/blog/samye-rasprostranyonnye-oshibki-pri-rabote-s-docker/
+
+####memo & history
 установить docker в ubuntu 1804
 
     # apt install -y docker.io docker
@@ -62,12 +81,26 @@
     $ docker exec -it 529c46e3cffd sh
     / # 
 
-важно, при создании контейнеров НАДО называть их с помощью флага _--name_, иначе они будут получать случайные названия, вычисляемые из хэша
+ВАЖНО:
+1. при создании контейнера можно ссылаться на локальный Dockerfile, типа так
+
+     docker build -t shaad .
+     Где . значит, что докерфайл лежит в этой же папке
+
+2. при создании контейнеров НАДО называть их с помощью флага _--name_, иначе они будут получать случайные названия, вычисляемые из хэша
 
 локальные образа можно запускать вот так:
 
-    docker run --name test -dp 80:80 shaad
-    _Где --name test задает имя контейнера, -dp 80:80 задает проброс порта, shaad имя образа._
+    $ docker run --name test -dp 80:80 shaad
+    Где --name test задает имя контейнера, -dp 80:80 задает проброс порта, shaad имя образа.
 
-перед тем как запушить готовый образ, надо сделать _docker login_ и _docker tag YOURIMAGE YOUR_DOCKERHUB_NAME/YOURIMAGE_
+перед тем как запушить готовый образ, надо сделать:
+
+    $ docker login
+    $ docker tag YOURIMAGE YOUR_DOCKERHUB_NAME/YOURIMAGE
+
+потом
+
+    $ docker push YOUR_DOCKERHUB_NAME/YOURIMAGE
+
 
