@@ -59,10 +59,10 @@ MACHINES = {
     :box_name => "centos/7",
     :box_version => "1804.02",
     :net => [
-                  {ip: '192.168.255.9', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                  {ip: '192.168.255.10', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
                   {ip: '192.168.1.1', adapter: 3, netmask: "255.255.255.128", virtualbox__intnet: "dev-net"},
-                  {ip: '192.168.1.129', adapter: 3, netmask: "255.255.255.192", virtualbox__intnet: "test-net"},
-                  {ip: '192.168.1.193', adapter: 3, netmask: "255.255.255.192", virtualbox__intnet: "hw-net"},
+                  {ip: '192.168.1.129', adapter: 4, netmask: "255.255.255.192", virtualbox__intnet: "test-net"},
+                  {ip: '192.168.1.193', adapter: 5, netmask: "255.255.255.192", virtualbox__intnet: "hw-net"},
                 ]
   },
 
@@ -99,10 +99,10 @@ Vagrant.configure("2") do |config|
           box.vm.network "public_network", boxconfig[:public]
         end
 
-        box.vm.provision "shell", inline: <<-SHELL
+        box.vm.provision "shell", run: "always", inline: <<-SHELL
           mkdir -p ~root/.ssh
           cp ~vagrant/.ssh/auth* ~root/.ssh
-          yum install -y traceroute net-tools
+          yum install -y traceroute net-tools tcpdump
         SHELL
         
         case boxname.to_s
