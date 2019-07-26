@@ -102,7 +102,7 @@ Vagrant.configure("2") do |config|
         box.vm.provision "shell", run: "always", inline: <<-SHELL
           mkdir -p ~root/.ssh
           cp ~vagrant/.ssh/auth* ~root/.ssh
-          yum install -y traceroute net-tools tcpdump
+          yum install -y traceroute net-tools tcpdump nano
         SHELL
         
         case boxname.to_s
@@ -171,6 +171,8 @@ Vagrant.configure("2") do |config|
             sysctl -p
             echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
             echo "GATEWAY=192.168.255.9" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+            iptables -t nat -A POSTROUTING ! -d 192.168.1.0/24 -o eth1 -j MASQUERADE
+            iptables-save > /etc/iptables.conf
             systemctl restart network
           SHELL
 
