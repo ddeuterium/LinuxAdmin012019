@@ -23,12 +23,14 @@ port knocking ("простукивание порта")- технология, �
 2. iptables
 3. и то, и другое с помощью скрипта
 
-Прочитать [быстро](https://otus.ru/nest/post/267/) и [подробно](https://wiki.archlinux.org/index.php/Port_knocking)
-
-
+![alt text](pics/01.png)
 
 ### выполнение
 
+сделать knoking port можно так: [быстро](https://otus.ru/nest/post/267/) и [подробно](https://wiki.archlinux.org/index.php/Port_knocking)
+
+        # ./knock.sh 192.168.255.1 8881 7777 9991
+        # ssh 192.168.255.1 -vvv
 
 
 ### литература

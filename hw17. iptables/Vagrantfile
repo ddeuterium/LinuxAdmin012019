@@ -11,6 +11,16 @@ MACHINES = {
                    {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
                 ]
       },
+    
+    :inetrouter2 => {
+        :box_name => "centos/6",
+        :net => [
+                   {ip: '192.168.255.12', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                ],
+        
+        :public => {use_dhcp_assigned_default_route: true, :adapter => 3}
+      },
+    
     :centralrouter => {
         :box_name => "centos/7",
         :net => [
@@ -103,13 +113,17 @@ MACHINES = {
               echo "192.168.0.0/16 via 192.168.255.2" >  /etc/sysconfig/network-scripts/route-eth1
               service network restart
               cp /vagrant/iptables.rules /etc/iptables.conf
-              iptables-restore < /etc/iptables.conf
-              service iptables save
+#              iptables-restore < /etc/iptables.conf
+#              service iptables save
             SHELL
             
 		      when "centralrouter"
 			      box.vm.provision "shell", inline: <<-SHELL
-			      echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
+            yum install -y nmap
+            cp /vagrant/knock.sh /home/vagrant/
+            chmod +x /home/vagrant/knock.sh
+#            sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
+            echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
 			      sysctl --system
 			      echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
             cp /etc/sysconfig/network-scripts/ifcfg-eth1 /etc/sysconfig/network-scripts/ifcfg-eth1:1
