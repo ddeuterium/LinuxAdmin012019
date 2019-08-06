@@ -100,11 +100,11 @@ MACHINES = {
 		      when "inetrouter"
 			      box.vm.provision "shell", inline: <<-SHELL
 			        echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.conf
-			        sysctl -p
-			        iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
-              iptables-save > /etc/iptables.conf
               echo "192.168.0.0/16 via 192.168.255.2" >  /etc/sysconfig/network-scripts/route-eth1
-			        service network restart
+              service network restart
+              cp /vagrant/iptables.rules /etc/iptables.conf
+              iptables-restore < /etc/iptables.conf
+              service iptables save
             SHELL
             
 		      when "centralrouter"
