@@ -87,7 +87,11 @@
     *** Creating image file done ***
      *** Creating initramfs image file '/boot/initramfs-3.10.0-862.2.3.el7.x86_64.img' done ***
 
-не выходя из chroot надо в файле /boot/grub2/grub.cfg заменить rd.lvm.lv=VolGroup00/LogVol00 на rd.lvm.lv=vg_root/lv_root, чтобы при загрузке был смонтирована перенесённая файловая система
+не выходя из chroot надо в файле /boot/grub2/grub.cfg заменить rd.lvm.lv=VolGroup00/LogVol00 на rd.lvm.lv=vg_root/lv_root, чтобы при загрузке был смонтирована перенесённая файловая система.
+
+######ВАЖНО######
+в продакшене лучше так не делать. Настройки, создаваемые grub2-mkconfig делаются на основе /etc/default/grub. После ЛЮБЫХ изменений граба надо делать grub2mkconfig
+
 
 Перезагруиться успешно с новым рут томом. Убедиться в этом можно посмотрев вывод lsblk:
   
