@@ -27,6 +27,10 @@ port knocking ("простукивание порта")- технология, �
 
 ### выполнение
 
+перед тем, как сделать vagrant up, надо сделать
+
+        ssh-keygen -y -f ~/.vagrant.d/insecure_private_key > ~/.vagrant.d/insecure_key.pub
+
 сделать knoking port можно так: [быстро](https://otus.ru/nest/post/267/) и [подробно](https://wiki.archlinux.org/index.php/Port_knocking)
 
         # ./knock.sh 192.168.255.1 8881 7777 9991 && ssh 192.168.255.1 -vvv

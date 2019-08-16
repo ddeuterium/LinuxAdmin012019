@@ -4,122 +4,118 @@ home = ENV['HOME']
 ENV["LC_ALL"] = "en_US.UTF-8"
 
 MACHINES = {
+    
     :inetrouter => {
         :box_name => "centos/6",
         #:public => {:ip => '10.10.10.1', :adapter => 1},
         :net => [
-                   {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
-                ]
-      },
-    
+                   {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "router-net"},
+               ]
+            },
+
     :inetrouter2 => {
-        :box_name => "centos/6",
+        :box_name => "centos/7",
         :net => [
-                   {ip: '192.168.255.12', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
-                ],
-        
-        :public => {use_dhcp_assigned_default_route: true, :adapter => 3}
-      },
-    
+                  {ip: '192.168.255.3', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "router-net"},
+                ]
+            },
     :centralrouter => {
         :box_name => "centos/7",
         :net => [
-                   {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                   {ip: '192.168.255.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "router-net"},
                    {ip: '192.168.0.1', adapter: 3, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
-                   {ip: '192.168.0.33', adapter: 4, netmask: "255.255.255.240", virtualbox__intnet: "hw-net"},
-                   {ip: '192.168.0.65', adapter: 5, netmask: "255.255.255.192", virtualbox__intnet: "wi-fi-net"},
+               
                 ]
-      },
+            },
   
     :centralserver => {
         :box_name => "centos/7",
         :net => [
-		        			{ip: '192.168.0.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
-                  {adapter: 3, auto_config: false, virtualbox__intnet: true},
-					        {adapter: 4, auto_config: false, virtualbox__intnet: true},
+                   {ip: '192.168.0.2', adapter: 2, netmask: "255.255.255.240", virtualbox__intnet: "dir-net"},
                 ]
-      },
-    }
+            },
+ 
+        }
 
-    Vagrant.configure("2") do |config|
+Vagrant.configure("2") do |config|
 
-      MACHINES.each do |boxname, boxconfig|
+  MACHINES.each do |boxname, boxconfig|
+      
+    config.vm.define boxname do |box|
 
-        config.vm.define boxname do |box|
+        box.vm.box = boxconfig[:box_name]
+        box.vm.host_name = boxname.to_s
 
-          box.vm.box = boxconfig[:box_name]
-		      box.vm.host_name = boxname.to_s
+        config.vm.provider "virtualbox" do |v|
+          v.memory = 256
+        end
 
-          boxconfig[:net].each do |ipconf|
-            box.vm.network "private_network", ipconf
-          end
-          
-          if boxconfig.key?(:public)
-            box.vm.network "public_network", boxconfig[:public]
-          end
-
-          box.vm.provider :virtualbox do |vb|
-            vb.customize ["modifyvm", :id, "--memory", "256"]
-          end
-
-          box.vm.provision "shell", inline: <<-SHELL
-            setenforce 0
-            mkdir -p ~root/.ssh
- #           cp ~vagrant/.ssh/auth* ~root/.ssh
- #           cp ~/.ssh/id_rsa* ~root/.ssh
-#            cp ~/.ssh/
-#            yum install -y traceroute net-tools tcpdump nano  
-          SHELL
+        boxconfig[:net].each do |ipconf|
+          box.vm.network "private_network", ipconf
+        end
         
-          config.ssh.insert_key = false
-          config.ssh.private_key_path = ['~/.vagrant.d/insecure_private_key', '~/.ssh/id_rsa']
-          config.vm.provision "file", source: "~/.vagrant.d/insecure_key.pub", destination: "~/.ssh/authorized_keys"
-          config.vm.provision "file", source: "~/.vagrant.d/insecure_private_key", destination: "/root/.ssh/id_rsa"
-  
+        if boxconfig.key?(:public)
+          box.vm.network "public_network", boxconfig[:public] 
+        end
 
-		      case boxname.to_s
-		      when "inetrouter"
-			      box.vm.provision "shell", inline: <<-SHELL
-			        echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.conf
-              echo "192.168.0.0/16 via 192.168.255.2" >  /etc/sysconfig/network-scripts/route-eth1
-              service network restart
-              cp /vagrant/iptables.rules /etc/iptables.conf
-#              iptables-restore < /etc/iptables.conf
-#              service iptables save
+        box.vm.provision "shell", inline: <<-SHELL
+          mkdir -p ~root/.ssh
+                cp ~vagrant/.ssh/auth* ~root/.ssh
+        SHELL
+        
+        case boxname.to_s
+          when "inetrouter"
+            box.vm.provision "shell", run: "always", inline: <<-SHELL
+            sysctl net.ipv4.conf.all.forwarding=1
+            iptables-restore < /vagrant/iptables_inetrouter.rules
+            iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
+            ip route add 192.168.0.0/16 via 192.168.255.2
+            sed -i 's/PasswordAuthentication no/PasswordAuthentication yes/g' /etc/ssh/sshd_config
+            service sshd restart
             SHELL
-            
-		      when "centralrouter"
-			      box.vm.provision "shell", inline: <<-SHELL
-            yum install -y nmap
-            cp /vagrant/knock.sh /home/vagrant/
-            chmod +x /home/vagrant/knock.sh
-#            sed -i "s/PasswordAuthentication no/PasswordAuthentication yes/g" /etc/ssh/sshd_config
-            echo -e 'net.ipv4.conf.all.forwarding=1\nnet.ipv4.ip_forward=1' >> /etc/sysctl.d/99-override.conf
-			      sysctl --system
-			      echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
-            cp /etc/sysconfig/network-scripts/ifcfg-eth1 /etc/sysconfig/network-scripts/ifcfg-eth1:1
-            sed -i 's/192\.168\.255\.2/192.168.255.5/g' /etc/sysconfig/network-scripts/ifcfg-eth1:1
-            sed -i 's/eth1/eth1\:1/g' /etc/sysconfig/network-scripts/ifcfg-eth1:1
-            cp /etc/sysconfig/network-scripts/ifcfg-eth1 /etc/sysconfig/network-scripts/ifcfg-eth1:2
-            sed -i 's/192\.168\.255\.2/192.168.255.9/g' /etc/sysconfig/network-scripts/ifcfg-eth1:2
-            sed -i 's/eth1/eth1\:2/g' /etc/sysconfig/network-scripts/ifcfg-eth1:2
-            echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-			      echo "192.168.2.0/24 via 192.168.255.6" >  /etc/sysconfig/network-scripts/route-eth1
-			      echo "192.168.1.0/24 via 192.168.255.10" >> /etc/sysconfig/network-scripts/route-eth1
-			      systemctl restart network
-			    SHELL
-    
-          when "centralserver"
-			      box.vm.provision "shell", inline: <<-SHELL
-			      echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
-			      echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
-			      systemctl restart network
-			    SHELL
-        
+          
+        when "inetrouter2"
+            box.vm.network 'forwarded_port', guest: 8080, host: 8080, host_ip: '127.0.0.1'
+            box.vm.provision "shell", run: "always", inline: <<-SHELL
+              sysctl net.ipv4.conf.all.forwarding=1
+              iptables -t nat -A POSTROUTING ! -d 192.168.0.0/16 -o eth0 -j MASQUERADE
+              ip route add 192.168.0.0/16 via 192.168.255.2
+              echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+              echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0
+              iptables-restore < /vagrant/iptables_inetrouter2.rules
+            SHELL
+
+        when "centralrouter"
+            box.vm.provision "shell", run: "always", inline: <<-SHELL
+              echo net.ipv4.conf.all.forwarding=1 >> /etc/sysctl.conf
+              echo net.ipv4.ip_forward = 1 >> /etc/sysctl.conf
+              sysctl -p /etc/sysctl.conf
+              echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
+              echo "GATEWAY=192.168.255.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+              systemctl restart network
+              yum install nmap -y
+              chmod +x /vagrant/knock.sh
+              cp /vagrant/knock.sh ~/
+              systemctl stop firewalld
+              setenforce 0
+              SHELL
+
+        when "centralserver"
+            box.vm.provision "shell", run: "always", inline: <<-SHELL
+              echo "DEFROUTE=no" >> /etc/sysconfig/network-scripts/ifcfg-eth0 
+              echo "GATEWAY=192.168.0.1" >> /etc/sysconfig/network-scripts/ifcfg-eth1
+              systemctl restart network
+              yum install -y epel-release
+              yum install -y nginx
+              systemctl enable nginx
+              systemctl start nginx
+              systemctl stop firewalld
+              setenforce 0
+              SHELL
         end
 
       end
 
-  end
-
+    end
+  
 end
