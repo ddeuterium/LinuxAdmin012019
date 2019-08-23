@@ -64,7 +64,7 @@ Vagrant.configure("2") do |config|
           when "ABR1"
             box.vm.provision "shell", run: "always", inline: <<-SHELL
               setenforce 0
-              yum install -y quagga traceroute nano
+              yum install -y quagga traceroute
               cp /vagrant/network-scripts/ABR1-ifcfg-vlan12 /etc/sysconfig/network-scripts/ifcfg-vlan12
               cp /vagrant/network-scripts/ABR1-ifcfg-vlan16 /etc/sysconfig/network-scripts/ifcfg-vlan16
               cp /vagrant/configs/daemons /etc/quagga/daemons
@@ -85,7 +85,7 @@ Vagrant.configure("2") do |config|
         when "ABR2"
             box.vm.provision "shell", run: "always", inline: <<-SHELL
               setenforce 0
-              yum install -y quagga traceroute  nano
+              yum install -y quagga traceroute
               cp /vagrant/network-scripts/ABR2-ifcfg-vlan12 /etc/sysconfig/network-scripts/ifcfg-vlan12
               cp /vagrant/network-scripts/ABR2-ifcfg-vlan20 /etc/sysconfig/network-scripts/ifcfg-vlan20
               cp /vagrant/configs/daemons /etc/quagga/daemons
@@ -106,7 +106,7 @@ Vagrant.configure("2") do |config|
         when "ABR3"
             box.vm.provision "shell", run: "always", inline: <<-SHELL
               setenforce 0
-              yum install -y quagga traceroute nano
+              yum install -y quagga traceroute
               cp /vagrant/network-scripts/ABR3-ifcfg-vlan16 /etc/sysconfig/network-scripts/ifcfg-vlan16
               cp /vagrant/network-scripts/ABR3-ifcfg-vlan20 /etc/sysconfig/network-scripts/ifcfg-vlan20
               cp /vagrant/configs/daemons /etc/quagga/daemons
