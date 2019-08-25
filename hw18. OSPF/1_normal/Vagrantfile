@@ -1,7 +1,5 @@
 # -*- mode: ruby -*-
 # vim: set ft=ruby :
-# -*- mode: ruby -*-
-# vim: set ft=ruby :
 
 MACHINES = {
 
@@ -10,7 +8,7 @@ MACHINES = {
     :net => [
               {adapter: 2, auto_config: false, virtualbox__intnet: "vlan12"},
               {adapter: 3, auto_config: false, virtualbox__intnet: "vlan16"},
-              {ip: '10.0.10.1', adapter: 4, netmask: "255.255.255.0", virtualbox__intnet: "Area1"},
+              {ip: '10.0.10.1', adapter: 4, netmask: "255.255.255.0", virtualbox__intnet: "AR0"},
             ]
   }, 
 
@@ -19,7 +17,7 @@ MACHINES = {
     :net => [
               {adapter: 2, auto_config: false, virtualbox__intnet: "vlan12"},
               {adapter: 3, auto_config: false, virtualbox__intnet: "vlan20"},
-              {ip: '10.0.20.1', adapter: 4, netmask: "255.255.255.0", virtualbox__intnet: "Area2"},
+              {ip: '10.0.20.1', adapter: 4, netmask: "255.255.255.0", virtualbox__intnet: "AR1"},
             ]
   }, 
 
@@ -28,7 +26,7 @@ MACHINES = {
     :net => [
               {adapter: 2, auto_config: false, virtualbox__intnet: "vlan16"},
               {adapter: 3, auto_config: false, virtualbox__intnet: "vlan20"},
-              {ip: '10.0.30.1', adapter: 4, netmask: "255.255.255.0", virtualbox__intnet: "Area3"},
+              {ip: '10.0.30.1', adapter: 4, netmask: "255.255.255.0", virtualbox__intnet: "AR2"},
             ]
   }, 
 
@@ -66,13 +64,13 @@ Vagrant.configure("2") do |config|
           when "ABR1"
             box.vm.provision "shell", run: "always", inline: <<-SHELL
               setenforce 0
-              yum install -y quagga traceroute
+              yum install -y quagga traceroute nano
               cp /vagrant/network-scripts/ABR1-ifcfg-vlan12 /etc/sysconfig/network-scripts/ifcfg-vlan12
               cp /vagrant/network-scripts/ABR1-ifcfg-vlan16 /etc/sysconfig/network-scripts/ifcfg-vlan16
               cp /vagrant/configs/daemons /etc/quagga/daemons
               cp /vagrant/configs/ABR1-zebra.conf /etc/quagga/zebra.conf
               cp /vagrant/configs/ABR1-ospfd.conf /etc/quagga/ospfd.conf
-              chown quagga:quaggavt /etc/quagga/ospfd.conf
+              chown quagga:quagga /etc/quagga/ospfd.conf
               chown quagga:quagga /etc/quagga/zebra.conf
               echo net.ipv4.conf.all.forwarding=1  >> /etc/sysctl.conf
               echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
@@ -87,13 +85,13 @@ Vagrant.configure("2") do |config|
         when "ABR2"
             box.vm.provision "shell", run: "always", inline: <<-SHELL
               setenforce 0
-              yum install -y quagga traceroute
+              yum install -y quagga traceroute nano
               cp /vagrant/network-scripts/ABR2-ifcfg-vlan12 /etc/sysconfig/network-scripts/ifcfg-vlan12
               cp /vagrant/network-scripts/ABR2-ifcfg-vlan20 /etc/sysconfig/network-scripts/ifcfg-vlan20
               cp /vagrant/configs/daemons /etc/quagga/daemons
               cp /vagrant/configs/ABR2-zebra.conf /etc/quagga/zebra.conf
               cp /vagrant/configs/ABR2-ospfd.conf /etc/quagga/ospfd.conf
-              chown quagga:quaggavt /etc/quagga/ospfd.conf
+              chown quagga:quagga /etc/quagga/ospfd.conf
               chown quagga:quagga /etc/quagga/zebra.conf              
               echo net.ipv4.conf.all.forwarding=1  >> /etc/sysctl.conf
               echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
@@ -108,13 +106,13 @@ Vagrant.configure("2") do |config|
         when "ABR3"
             box.vm.provision "shell", run: "always", inline: <<-SHELL
               setenforce 0
-              yum install -y quagga traceroute
+              yum install -y quagga traceroute nano
               cp /vagrant/network-scripts/ABR3-ifcfg-vlan16 /etc/sysconfig/network-scripts/ifcfg-vlan16
               cp /vagrant/network-scripts/ABR3-ifcfg-vlan20 /etc/sysconfig/network-scripts/ifcfg-vlan20
               cp /vagrant/configs/daemons /etc/quagga/daemons
               cp /vagrant/configs/ABR3-zebra.conf /etc/quagga/zebra.conf
               cp /vagrant/configs/ABR3-ospfd.conf /etc/quagga/ospfd.conf
-              chown quagga:quaggavt /etc/quagga/ospfd.conf
+              chown quagga:quagga /etc/quagga/ospfd.conf
               chown quagga:quagga /etc/quagga/zebra.conf
               echo net.ipv4.conf.all.forwarding=1  >> /etc/sysctl.conf
               echo net.ipv4.ip_forward=1 >> /etc/sysctl.conf
