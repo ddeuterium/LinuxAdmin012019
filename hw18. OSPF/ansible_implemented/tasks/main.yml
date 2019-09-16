@@ -1,0 +1,46 @@
+---
+  - name: install quagga
+    yum:
+      name: quagga
+      state: latest
+    tags:
+      - packages
+
+  - name: Configure zebra ABR1
+    copy:
+      src: "ABR1_zebra.conf"
+      dest: "/etc/quagga/zebra.conf"
+    when: ansible_hostname == 'ABR1'
+
+  - name: Configure ospf ABR1
+    copy:
+      src: "ABR1_ospfd.conf"
+      dest: "/etc/quagga/ospfd.conf"
+    when: ansible_hostname == 'ABR1'
+    notify: restart quagga
+
+  - name: Configure zebra ABR2
+    copy:
+      src: "ABR2.zebra.conf"
+      dest: "/etc/quagga/zebra.conf"
+    when: ansible_hostname == 'ABR2'
+
+  - name: Configure ospf ABR2
+    copy:
+      src: "ABR2_ospfd.conf"
+      dest: "/etc/quagga/ospfd.conf"
+    when: ansible_hostname == 'ABR2'
+    notify: restart quagga
+  
+  - name: Configure zebra ABR3
+    copy:
+      src: "ABR3_zebra.conf"
+      dest: "/etc/quagga/zebra.conf"
+    when: ansible_hostname == 'ABR3'
+
+  - name: Configure osfd ABR3
+    copy:
+      src: "ABR3_ospfd.conf"
+      dest: "/etc/quagga/ospfd.conf"
+    when: ansible_hostname == 'ABR3'
+    notify: restart quagga
