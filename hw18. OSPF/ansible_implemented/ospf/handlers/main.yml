@@ -1,0 +1,4 @@
+---
+- name: restart quagga
+  service: name=zebra state=restarted
+
