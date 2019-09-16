@@ -21,7 +21,7 @@
 
   - name: Configure zebra ABR2
     copy:
-      src: "ABR2.zebra.conf"
+      src: "ABR2_zebra.conf"
       dest: "/etc/quagga/zebra.conf"
     when: ansible_hostname == 'ABR2'
 
