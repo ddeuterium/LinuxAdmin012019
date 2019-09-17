@@ -16,4 +16,13 @@ Cделанную работу нужно залить hub.docker.com, при э
 
 Базовое задание должно быть в образе с тегом latest, задание для продвинутых в образе с тегом advanced.
 
-Самопроверка: docker run -p 80:80 your_account/your_repo:latest (или your_account/your_repo:advanced) - запустит nginx c выполненым заданием. сurl http://localhost/otus.txt - редирект(или ошибка) , открыв ту же страницу в браузере - увидим your_account/your_repo
+### проверка
+
+выполнить
+
+    docker run -p 80:80 shaadowsky/ddos:latest
+    curl http://localhost/otus.txt -i -L
+    curl http://localhost/otus.txt -i -L -b cookie -c cookie
+
+в ответе будет 302 и 200
+
