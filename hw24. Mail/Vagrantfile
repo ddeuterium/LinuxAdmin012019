@@ -1,0 +1,54 @@
+# -*- mode: ruby -*-
+# vim: set ft=ruby :
+home = ENV['HOME']
+ENV["LC_ALL"] = "en_US.UTF-8"
+
+MACHINES = {
+    :mail => {
+        :box_name => "centos/7",
+        :net => [
+                   {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
+                ]
+      },
+    }
+
+    Vagrant.configure("2") do |config|
+
+      MACHINES.each do |boxname, boxconfig|
+
+        config.vm.define boxname do |box|
+
+          box.vm.box = boxconfig[:box_name]
+		      box.vm.host_name = boxname.to_s
+
+          boxconfig[:net].each do |ipconf|
+            box.vm.network "private_network", ipconf
+          end
+          
+          if boxconfig.key?(:public)
+            box.vm.network "public_network", boxconfig[:public]
+          end
+
+          box.vm.provider :virtualbox do |vb|
+            vb.customize ["modifyvm", :id, "--memory", "256"]
+          end
+
+          box.vm.provision "shell", inline: <<-SHELL
+            mkdir -p ~root/.ssh
+            cp ~vagrant/.ssh/auth* ~root/.ssh
+            yum install -y traceroute net-tools tcpdump nano  
+          SHELL
+        
+		      case boxname.to_s
+		      when "mail"
+			      box.vm.provision "shell", inline: <<-SHELL
+
+                SHELL
+        
+        end
+
+      end
+
+  end
+
+end
