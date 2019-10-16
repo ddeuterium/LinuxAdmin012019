@@ -5,7 +5,7 @@ ENV["LC_ALL"] = "en_US.UTF-8"
 
 MACHINES = {
     :mail => {
-        :box_name => "centos/7",
+        :box_name => "centos/6",
         :net => [
                    {ip: '192.168.255.1', adapter: 2, netmask: "255.255.255.252", virtualbox__intnet: "router-net"},
                 ]
@@ -30,7 +30,7 @@ MACHINES = {
           end
 
           box.vm.provider :virtualbox do |vb|
-            vb.customize ["modifyvm", :id, "--memory", "256"]
+            vb.customize ["modifyvm", :id, "--memory", "512"]
           end
 
           box.vm.provision "shell", inline: <<-SHELL
@@ -42,6 +42,35 @@ MACHINES = {
 		      case boxname.to_s
 		      when "mail"
 			      box.vm.provision "shell", inline: <<-SHELL
+                  yum install epel-release -y
+                  um -y install http://repository.it4i.cz/mirrors/repoforge/redhat/el7/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm                  yum install -y http://centos.alt.ru/pub/repository/centos/6/x86_64/centalt-release-6-1.noarch.rpm
+                  wget http://rpms.famillecollet.com/enterprise/remi-release-6.rpm
+                  rpm -Uvh remi-release-6.rpm
+                  yum install -y wget mlocate bind-utils telnet mailx sharutils 
+                  yum update -y
+                  setenforce permissive
+                  yum install ntp
+                  ntpdate ntp5.stratum2.ru
+                  chkconfig ntpd on && /etc/init.d/ntpd start
+                  yum --enablerepo=remi install mysql-server -y
+                  service mysqld star
+                  chkconfig mysqld on
+                  mysql -e 'CREATE USER postfix@localhost IDENTIFIED BY 'mypassword';'
+                  mysql -e 'CREATE DATABASE postfix;'
+                  mysql -e 'GRANT ALL PRIVILEGES ON postfix.* TO postfix;'
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 SHELL
         
