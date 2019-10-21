@@ -62,19 +62,31 @@ MACHINES = {
        #           yum -y install clamav-server clamav-data clamav-update clamav-filesystem clamav clamav-scanner-systemd clamav-devel clamav-lib clamav-server-systemd
               wget https://github.com/Haran/Mail.CONF/blob/master/opt/mysql_dump.sql
               mysqldump postfix < mysql_dump.sql
+
+### кусок копирования настроек клама
 #                  mv /etc/clamd.d/scan.conf{,.default}
- #                 mv /vagrant/configs/clamav/scan.conf /etc/clam.d/scan.conf
+ #                 cp /vagrant/configs/clamav/scan.conf /etc/clam.d/
   #                mv /etc/freshclam.conf{,.default} 
-   #               mv /vagrant/configs/clamav/freshclam.service /usr/lib/systemd/system/freshclam.service
+   #               cp /vagrant/configs/clamav/freshclam.service /usr/lib/systemd/system/
     #              setsebool -P antivirus_can_scan_system 1
      #             setsebool -P clamd_use_jit 1
+### конец куска копирования настроек клама
+
+      ### почему-то не стартует клам
       #            freshclam
         #          systemctl start freshclam
          #         systemctl enable freshclam
           #        systemctl start clamd@scan
            #       systemctl enable clamd@scan
-#              yum update postfix
+      ### поэтому кусок закоменнтирован
+
               yum install dovecot dovecot-mysql -y
+              groupadd  -g 1100 vmail
+              useradd -d /var/vmail/ -g 1100 -u 1100 vmail
+              chown vmail:vmail /var/vmail
+              mkdir /etc/postfix/certs
+              openssl req -new -x509 -days 3650 -nodes -out /etc/postfix/certs/cert.pem -keyout /etc/postfix/certs/key.pem
+              mkdir /etc/postfix/mysql
 
 
 
