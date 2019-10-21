@@ -15,6 +15,11 @@
 
 Всё это сложить в git, ссылку прислать в "чат с преподавателем"
 
+#### для стенда
+
+1. https://habr.com/ru/post/193220/ (сделано по центос 6, я делал на центос 7)
+2. https://hostpresto.com/community/tutorials/how-to-install-clamav-on-centos-7/ (установка clamav)
+
 ### теория
 
 MTA - Mail Transfer Agent - сервис передачи сообщения
