@@ -19,7 +19,7 @@
 # (by changing 5xx replies into 4xx replies). However, soft_bounce
 # is no cure for address rewriting mistakes or mail routing mistakes.
 #
-#soft_bounce = no
+soft_bounce = no
 
 # LOCAL PATHNAME INFORMATION
 #
@@ -72,7 +72,7 @@ mail_owner = postfix
 # from gethostname(). $myhostname is used as a default value for many
 # other configuration parameters.
 #
-#myhostname = host.domain.tld
+myhostname = host.domain.tld
 #myhostname = virtual.domain.tld
 
 # The mydomain parameter specifies the local internet domain name.
@@ -80,7 +80,7 @@ mail_owner = postfix
 # $mydomain is used as a default value for many other configuration
 # parameters.
 #
-#mydomain = domain.tld
+mydomain = domain.tld
 
 # SENDING MAIL
 # 
@@ -95,7 +95,7 @@ mail_owner = postfix
 # myorigin also specifies the default domain name that is appended
 # to recipient addresses that have no @domain part.
 #
-#myorigin = $myhostname
+myorigin = $myhostname
 #myorigin = $mydomain
 
 # RECEIVING MAIL
@@ -161,7 +161,8 @@ inet_protocols = all
 #
 # See also below, section "REJECTING MAIL FOR UNKNOWN LOCAL USERS".
 #
-mydestination = $myhostname, localhost.$mydomain, localhost
+mydestination = localhost.$mydomain, localhost
+#mydestination = $myhostname, localhost.$mydomain, localhost
 #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
 #mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain,
 #       mail.$mydomain, www.$mydomain, ftp.$mydomain
@@ -249,6 +250,8 @@ unknown_local_recipient_reject_code = 550
 #mynetworks_style = class
 #mynetworks_style = subnet
 #mynetworks_style = host
+mynetworks = 192.168.255.0/28, 127.0.0.0/16
+
 
 # Alternatively, you can specify the mynetworks list by hand, in
 # which case Postfix ignores the mynetworks_style setting.
@@ -569,7 +572,7 @@ alias_database = hash:/etc/aliases
 # You MUST specify $myhostname at the start of the text. That is an
 # RFC requirement. Postfix itself does not care.
 #
-#smtpd_banner = $myhostname ESMTP $mail_name
+smtpd_banner = $myhostname ESMTP $mail_name
 #smtpd_banner = $myhostname ESMTP $mail_name ($mail_version)
 
 # PARALLEL DELIVERY TO THE SAME DESTINATION
@@ -603,7 +606,7 @@ debug_peer_level = 2
 # increase the verbose logging level by the amount specified in the
 # debug_peer_level parameter.
 #
-#debug_peer_list = 127.0.0.1
+debug_peer_list = 127.0.0.1
 #debug_peer_list = some.domain
 
 # The debugger_command specifies the external command that is executed
@@ -686,3 +689,76 @@ virtual_alias_maps = mysql:/etc/postfix/mysql/virtual_alias_maps.cf,
                      mysql:/etc/postfix/mysql/virtual_alias_domain_maps.cf
 virtual_mailbox_domains = mysql:/etc/postfix/mysql/virtual_mailbox_domains.cf
 virtual_mailbox_maps = mysql:/etc/postfix/mysql/virtual_mailbox_maps.cf
+
+# ============================================================
+# RESTRICTIONS
+#
+# Uncomment reject_rbl_client if necessary
+# More information at: http://help.ubuntu.ru/wiki/фильтрация_спама_на_уровне_smtp_протокола
+# ============================================================
+smtpd_discard_ehlo_keywords = etrn, silent-discard
+smtpd_forbidden_commands = CONNECT GET POST
+broken_sasl_auth_clients = yes
+smtpd_delay_reject = yes
+smtpd_helo_required = yes
+disable_vrfy_command = yes
+
+smtpd_helo_restrictions = permit_mynetworks,
+                          permit_sasl_authenticated,
+                          reject_non_fqdn_helo_hostname,
+                          reject_invalid_helo_hostname
+
+smtpd_data_restrictions = permit_mynetworks,
+                          permit_sasl_authenticated,
+                          reject_unauth_pipelining,
+                          reject_multi_recipient_bounce,
+
+smtpd_sender_restrictions = permit_mynetworks,
+                            permit_sasl_authenticated,
+                            reject_non_fqdn_sender,
+                            reject_unknown_sender_domain
+
+smtpd_recipient_restrictions = reject_non_fqdn_recipient,
+                               reject_unknown_recipient_domain,
+                               reject_multi_recipient_bounce,
+                               permit_mynetworks,
+                               permit_sasl_authenticated,
+                               reject_unauth_destination,
+                               check_policy_service unix:/var/spool/postfix/postgrey/socket,
+                               #reject_rbl_client zen.spamhaus.org,
+                               #reject_rbl_client bl.spamcop.net,
+                               #reject_rbl_client dnsbl.sorbs.net,
+                               reject_invalid_hostname
+
+# ============================================================
+# TLS
+# ============================================================
+smtp_tls_security_level = may
+smtpd_tls_security_level = may
+smtpd_tls_loglevel = 1
+smtpd_tls_received_header = yes
+smtpd_tls_session_cache_timeout = 3600s
+smtp_tls_session_cache_database = btree:$data_directory/smtp_tls_session_cache
+smtpd_tls_key_file = /etc/postfix/certs/key.pem
+smtpd_tls_cert_file = /etc/postfix/certs/cert.pem
+tls_random_source = dev:/dev/urandom
+
+# ============================================================
+# LIMITS
+# ============================================================
+message_size_limit = 51200000
+smtpd_soft_error_limit = 10
+smtpd_hard_error_limit = 15
+smtpd_error_sleep_time = 20
+anvil_rate_time_unit = 60s
+smtpd_client_connection_count_limit = 20
+smtpd_client_connection_rate_limit = 30
+smtpd_client_message_rate_limit = 30
+smtpd_client_event_limit_exceptions = 127.0.0.1/8
+smtpd_client_connection_limit_exceptions = 127.0.0.1/8
+
+# ============================================================
+# QUEUE
+# ============================================================
+maximal_queue_lifetime = 1d
+bounce_queue_lifetime = 1d
