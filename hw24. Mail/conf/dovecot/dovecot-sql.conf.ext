@@ -1,0 +1,5 @@
+driver = mysql
+connect = host=localhost dbname=postfix user=postfix password=mypassword
+default_pass_scheme = MD5-CRYPT
+user_query = SELECT '/var/vmail/%d/%n' as home, 'maildir:/var/vmail/%d/%n'as mail, 1100 AS uid, 1100 AS gid, concat('*:bytes=', quota) AS quota_rule FROM mailbox WHERE username = '%u' AND active = '1'
+password_query = SELECT username as user, password, '/var/vmail/%d/%n' as userdb_home, 'maildir:/var/vmail/%d/%n' as userdb_mail, 1100 as userdb_uid, 1100 as userdb_gid, concat('*:bytes=', quota) AS userdb_quota_rule FROM mailbox WHERE username = '%u' AND active = '1'

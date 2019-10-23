@@ -762,3 +762,21 @@ smtpd_client_connection_limit_exceptions = 127.0.0.1/8
 # ============================================================
 maximal_queue_lifetime = 1d
 bounce_queue_lifetime = 1d
+
+# ============================================================
+# SASL
+# ============================================================
+smtpd_sasl_auth_enable = yes
+smtpd_sasl_security_options = noanonymous
+smtpd_sasl_type = dovecot
+smtpd_sasl_path = private/auth
+
+# ============================================================
+# VIRTUAL
+# ============================================================
+virtual_mailbox_base = /var/vmail
+virtual_minimum_uid = 1000
+virtual_uid_maps = static:1000
+virtual_gid_maps = static:1000
+virtual_transport = dovecot
+dovecot_destination_recipient_limit = 1
