@@ -17,8 +17,13 @@
 
 #### для стенда
 
-1. https://habr.com/ru/post/193220/ (сделано по центос 6, я делал на центос 7)
+1. https://habr.com/ru/post/193220/ (сделано по центос 6)
 2. https://hostpresto.com/community/tutorials/how-to-install-clamav-on-centos-7/ (установка clamav)
+
+TODO посмотреть в сторону [iRedMail](https://www.iredmail.org/) - сборка Postfix, Dovecot, Apache, MySQL/PostgreSQL, Policyd, Amavis, Fail2ban, Roundcube и даже Awstats. Ставится легко, работает стабильно, есть красивая админка (бесплатная) и очень красивая админка (платная) не идущая ни в какое сравнение с убогим PostfixAdmin.
+
+UPD в итоге развернул iRedMail. После подъема стенда _vagrant up_ выполнить _sudo bash /home/vagrant/iRedMail-0.9.9/iRedMail.sh_
+
 
 ### теория
 
