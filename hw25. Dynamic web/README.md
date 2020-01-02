@@ -16,6 +16,8 @@
 
 Развернуто:
 
-[wordpress на порту 8080](localhost:8080)
-[javascript на порту 8081](localhost:8081)
-[flask на порту 8082](localhost:8082)
+[wordpress на порту 8080](http://localhost:8080)
+
+[javascript на порту 8081](http://localhost:8081)
+
+[flask на порту 8082](http://localhost:8082)
