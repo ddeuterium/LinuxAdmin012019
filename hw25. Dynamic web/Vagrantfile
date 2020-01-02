@@ -47,6 +47,7 @@ Vagrant.configure(2) do |config|
             cp -r wordpress /var/www/html/
             curl -sL https://rpm.nodesource.com/setup_11.x | bash -
             yum install -y nodejs
+            rm wordpress*
             mkdir -p /var/www/html/sysmon
             cp /vagrant/server.js /var/www/html/sysmon/server.js
             npm install forever -g
@@ -63,8 +64,8 @@ Vagrant.configure(2) do |config|
             cp /vagrant/myproject.ini /opt/myproject/myproject.ini
             deactivate
             cp /vagrant/uwsgi.service /etc/systemd/system/uwsgi.service
-            systemctl start uwsgi.service
-            systemctl start php-fpm              
+            systemctl enable --now uwsgi.service
+            systemctl enable --now php-fpm              
             systemctl restart nginx
         SHELL
   
